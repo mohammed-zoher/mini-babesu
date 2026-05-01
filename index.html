@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Baby Week by Week</title>
+<style>
+  :root {
+    --cream: #FDF6EE;
+    --card-bg: #FFFCF8;
+    --warm-brown: #5C3D2E;
+    --muted: #8C7060;
+    --accent: #C4704A;
+    --accent-light: #F0D9CC;
+    --accent-pale: #FAF0EA;
+    --border: #EAD9CC;
+    --shadow: rgba(92,61,46,0.08);
+    --green: #5A7A5A;
+    --green-pale: #EBF2EB;
+    --blue: #4A6A8A;
+    --blue-pale: #E8F0F7;
+    --gold: #A07A3A;
+    --gold-pale: #F5EDD8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--warm-brown);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--warm-brown);
+    background-image: radial-gradient(ellipse at 70% 50%, rgba(196,112,74,0.3) 0%, transparent 70%);
+    padding: 52px 24px 44px;
+    text-align: center;
+    color: var(--cream);
+  }
+  .header .series-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: normal;
+    letter-spacing: -0.01em;
+    color: #FDF6EE;
+    margin-bottom: 10px;
+  }
+  .header .subtitle {
+    font-style: italic;
+    font-size: 15px;
+    color: rgba(253,246,238,0.6);
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  /* MAIN */
+  .main {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+  }
+
+  /* SECTION HEADING */
+  .section-heading {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  /* WEEK GRID */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    margin-bottom: 40px;
+  }
+
+  /* WEEK CARD — available */
+  .week-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 2px 16px var(--shadow);
+    padding: 20px 22px;
+    text-decoration: none;
+    color: var(--warm-brown);
+    display: block;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .week-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--accent);
+    border-radius: 4px 0 0 4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .week-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(92,61,46,0.13);
+    border-color: var(--accent-light);
+  }
+  .week-card:hover::before {
+    opacity: 1;
+  }
+
+  .week-num {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 5px;
+  }
+  .week-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--warm-brown);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .week-subtitle {
+    font-style: italic;
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  .week-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .topic-chip {
+    background: var(--accent-pale);
+    border: 1px solid var(--accent-light);
+    border-radius: 12px;
+    padding: 3px 9px;
+    font-size: 11px;
+    color: var(--warm-brown);
+  }
+  .week-arrow {
+    position: absolute;
+    top: 20px;
+    right: 18px;
+    color: var(--accent-light);
+    font-size: 16px;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+  .week-card:hover .week-arrow {
+    transform: translateX(3px);
+    color: var(--accent);
+  }
+
+  /* WEEK CARD — coming soon */
+  .week-card.coming-soon {
+    background: var(--cream);
+    border: 1px dashed var(--border);
+    box-shadow: none;
+    opacity: 0.55;
+    cursor: default;
+    pointer-events: none;
+  }
+  .week-card.coming-soon::before { display: none; }
+  .week-card.coming-soon .week-num { color: var(--muted); }
+  .week-card.coming-soon .week-title { color: var(--muted); }
+  .week-card.coming-soon .week-arrow { display: none; }
+  .coming-badge {
+    display: inline-block;
+    background: var(--border);
+    color: var(--muted);
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 32px 0;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-style: italic;
+    font-size: 11px;
+    color: var(--muted);
+    padding-top: 8px;
+  }
+
+  @media (max-width: 480px) {
+    .week-grid { grid-template-columns: 1fr; }
+    .header { padding: 36px 20px 32px; }
+    .main { padding: 28px 16px 48px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="series-label">Reference Guide</div>
+  <h1>Your Baby Week by Week</h1>
+  <p class="subtitle">Quick-reference cards for every week of your baby's first year</p>
+</div>
+
+<div class="main" id="main"></div>
+
+<script>
+// ─────────────────────────────────────────────
+// WEEKS CONFIG — update this array each time a
+// new week page is generated.
+// ─────────────────────────────────────────────
+const WEEKS = [
+  {
+    week: 0,
+    title: "Your Newborn Has Arrived",
+    subtitle: "The very first days at home",
+    topics: ["Nappies", "Washing", "Cord Stump", "Feeding", "Breastfeeding", "Latching On"],
+    available: true
+  },
+  {
+    week: 1,
+    title: "Finding Your Feet",
+    subtitle: "Nappies, first baths, feeding, and sleep",
+    topics: ["Nappies", "First Bath", "Feeding", "Breastfeeding", "Sleep", "SIDS", "Development"],
+    available: true
+  }
+];
+
+// ─────────────────────────────────────────────
+// COMING-SOON PLACEHOLDERS
+// Shows a preview of upcoming weeks not yet built.
+// ─────────────────────────────────────────────
+const COMING_SOON = [2, 3, 4, 5, 6, 7, 8];
+
+// ─────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────
+const main = document.getElementById('main');
+
+// Available weeks
+const availableWeeks = WEEKS.filter(w => w.available);
+if (availableWeeks.length > 0) {
+  const heading = document.createElement('div');
+  heading.className = 'section-heading';
+  heading.textContent = `${availableWeeks.length} week${availableWeeks.length !== 1 ? 's' : ''} available`;
+  main.appendChild(heading);
+
+  const grid = document.createElement('div');
+  grid.className = 'week-grid';
+
+  availableWeeks.forEach(w => {
+    const a = document.createElement('a');
+    a.className = 'week-card';
+    a.href = `week-${w.week}.html`;
+    a.innerHTML = `
+      <div class="week-num">Week ${w.week}</div>
+      <div class="week-title">${w.title}</div>
+      <div class="week-subtitle">${w.subtitle}</div>
+      <div class="week-topics">
+        ${w.topics.map(t => `<span class="topic-chip">${t}</span>`).join('')}
+      </div>
+      <span class="week-arrow">→</span>
+    `;
+    grid.appendChild(a);
+  });
+
+  main.appendChild(grid);
+}
+
+// Coming soon
+const comingSoon = COMING_SOON.filter(n => !WEEKS.find(w => w.week === n && w.available));
+if (comingSoon.length > 0) {
+  const divider = document.createElement('div');
+  divider.className = 'divider';
+  main.appendChild(divider);
+
+  const heading2 = document.createElement('div');
+  heading2.className = 'section-heading';
+  heading2.textContent = 'Coming soon';
+  main.appendChild(heading2);
+
+  const grid2 = document.createElement('div');
+  grid2.className = 'week-grid';
+
+  comingSoon.forEach(n => {
+    const div = document.createElement('div');
+    div.className = 'week-card coming-soon';
+    div.innerHTML = `
+      <div class="week-num">Week ${n}</div>
+      <div class="week-title">Week ${n}</div>
+      <span class="coming-badge">Not yet generated</span>
+    `;
+    grid2.appendChild(div);
+  });
+
+  main.appendChild(grid2);
+}
+
+// Footer
+const footer = document.createElement('footer');
+footer.innerHTML = '<em>Source: Your Baby Week by Week</em> — all content sourced directly from the book';
+main.appendChild(footer);
+</script>
+
+</body>
+</html>

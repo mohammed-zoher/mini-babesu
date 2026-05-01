@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 0 — Your Baby Week by Week</title>
+<style>
+  :root {
+    --cream: #FDF6EE;
+    --card-bg: #FFFCF8;
+    --warm-brown: #5C3D2E;
+    --muted: #8C7060;
+    --accent: #C4704A;
+    --accent-light: #F0D9CC;
+    --accent-pale: #FAF0EA;
+    --border: #EAD9CC;
+    --shadow: rgba(92,61,46,0.08);
+    --green: #5A7A5A;
+    --green-pale: #EBF2EB;
+    --blue: #4A6A8A;
+    --blue-pale: #E8F0F7;
+    --gold: #A07A3A;
+    --gold-pale: #F5EDD8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--warm-brown);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--warm-brown);
+    background-image: radial-gradient(ellipse at 70% 50%, rgba(196,112,74,0.3) 0%, transparent 70%);
+    padding: 48px 24px 40px;
+    text-align: center;
+    color: var(--cream);
+  }
+  .header .week-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-size: clamp(26px, 5vw, 38px);
+    font-weight: normal;
+    letter-spacing: -0.01em;
+    color: #FDF6EE;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-style: italic;
+    font-size: 15px;
+    color: rgba(253,246,238,0.6);
+  }
+
+  /* NAV WRAPPER */
+  .nav-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 24px 0;
+  }
+  .counter {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    scroll-margin-top: 20px;
+  }
+  .progress-bar-track {
+    width: min(560px, 94%);
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.35s ease;
+  }
+
+  /* CARD */
+  .card-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 0 24px;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px var(--shadow);
+    width: min(560px, 100%);
+    overflow: hidden;
+    animation: slideIn 0.3s ease forwards;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-header {
+    padding: 24px 28px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .card-icon {
+    font-size: 22px;
+    background: var(--accent-pale);
+    border: 1px solid var(--accent-light);
+    border-radius: 12px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .card-title {
+    font-size: 19px;
+    font-weight: bold;
+    color: var(--warm-brown);
+    line-height: 1.2;
+  }
+  .card-subtitle {
+    font-style: italic;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+  .card-body {
+    padding: 22px 28px 28px;
+  }
+
+  /* STAT PILLS */
+  .stat-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .stat-pill {
+    background: var(--accent-pale);
+    border: 1px solid var(--accent-light);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: var(--warm-brown);
+  }
+  .stat-pill strong { color: var(--accent); }
+
+  /* BULLET LIST */
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  ul li {
+    padding: 10px 0 10px 20px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.65;
+    border-bottom: 1px solid var(--border);
+    color: var(--warm-brown);
+  }
+  ul li:last-child { border-bottom: none; }
+  ul li::before {
+    content: '·';
+    color: var(--accent);
+    position: absolute;
+    left: 4px;
+    top: 9px;
+    font-size: 20px;
+    line-height: 1.3;
+  }
+
+  /* NUMBERED STEPS */
+  ol.steps {
+    list-style: none;
+    counter-reset: steps;
+    margin: 0; padding: 0;
+  }
+  ol.steps li {
+    counter-increment: steps;
+    padding: 10px 0 10px 42px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.65;
+    border-bottom: 1px solid var(--border);
+  }
+  ol.steps li:last-child { border-bottom: none; }
+  ol.steps li::before {
+    content: counter(steps);
+    position: absolute;
+    left: 0;
+    top: 11px;
+    background: var(--accent);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+
+  /* INFO BOXES */
+  .info-box {
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin-top: 14px;
+  }
+  .info-box strong { display: block; margin-bottom: 4px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .info-box.warm  { background: var(--accent-pale); border: 1px solid var(--accent-light); color: var(--warm-brown); }
+  .info-box.warm strong { color: var(--accent); }
+  .info-box.green { background: var(--green-pale); border: 1px solid #BDD4BD; color: #3A5A3A; }
+  .info-box.green strong { color: var(--green); }
+  .info-box.blue  { background: var(--blue-pale);  border: 1px solid #BDD0E0; color: #2A4A6A; }
+  .info-box.blue strong  { color: var(--blue); }
+  .info-box.amber { background: var(--gold-pale);  border: 1px solid #D4B87A; color: #5A4010; }
+  .info-box.amber strong { color: var(--gold); }
+
+  /* DIFF ROW */
+  .diff-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .diff-col {
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .diff-col.left  { background: var(--blue-pale);  border: 1px solid #BDD0E0; color: #2A4A6A; }
+  .diff-col.right { background: var(--gold-pale);  border: 1px solid #D4B87A; color: #5A4010; }
+  .diff-col strong { display: block; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 5px; }
+  .diff-col.left strong  { color: var(--blue); }
+  .diff-col.right strong { color: var(--gold); }
+
+  /* LATCH CHECK */
+  .latch-check {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .latch-ok, .latch-no {
+    border-radius: 10px;
+    padding: 14px 14px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .latch-ok { background: var(--green-pale); border: 1px solid #BDD4BD; color: #3A5A3A; }
+  .latch-no { background: #FFF0F0; border: 1px solid #E0BDBD; color: #6A2A2A; }
+  .latch-ok strong, .latch-no strong { display: block; margin-bottom: 4px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* GENDER GRID */
+  .gender-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .gender-col {
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .gender-col.boy  { background: #E8F0F7; border: 1px solid #BDD0E0; color: #2A4060; }
+  .gender-col.girl { background: #FBF0F5; border: 1px solid #E0BDCF; color: #6A2A50; }
+  .gender-col strong { display: block; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 5px; }
+  .gender-col.boy strong  { color: var(--blue); }
+  .gender-col.girl strong { color: #C4608A; }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 18px 0 10px;
+  }
+
+  /* NAV BUTTONS */
+  .nav-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 24px 24px 16px;
+  }
+  .btn {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 14px;
+    padding: 10px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid var(--accent);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--accent);
+  }
+  .btn-outline:hover:not(:disabled) {
+    background: var(--accent);
+    color: white;
+    transform: translateY(-1px);
+  }
+  .btn-solid {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-solid:hover:not(:disabled) {
+    background: #A85A38;
+    transform: translateY(-1px);
+  }
+  .btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* DOTS */
+  .dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding-bottom: 40px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    padding: 0;
+  }
+  .dot.active {
+    background: var(--accent);
+    width: 10px;
+    height: 10px;
+  }
+  .dot:hover { background: var(--accent-light); }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-style: italic;
+    font-size: 11px;
+    color: var(--muted);
+    padding: 0 24px 36px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 500px) {
+    .diff-row, .latch-check, .gender-grid { grid-template-columns: 1fr; }
+    .btn { padding: 9px 20px; font-size: 13px; }
+    .card-header { padding: 18px 18px 14px; }
+    .card-body { padding: 16px 18px 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="week-label">Week 0</div>
+  <h1>Your Newborn Has Arrived</h1>
+  <p class="subtitle">The very first days at home</p>
+</div>
+
+<div class="nav-wrapper">
+  <div class="counter" id="counter">Card 1 of 6</div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressBar" style="width: 16.67%"></div>
+  </div>
+</div>
+
+<div class="card-wrapper">
+  <div class="card" id="card"></div>
+</div>
+
+<div class="nav-buttons">
+  <button class="btn btn-outline" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+  <button class="btn btn-solid"   id="nextBtn" onclick="navigate(1)">Next →</button>
+</div>
+
+<div class="dots" id="dots"></div>
+
+<footer><em>Source: Your Baby Week by Week</em> — all content sourced directly from the book</footer>
+
+<script>
+const cards = [
+  {
+    icon: '🩹',
+    title: 'Nappies',
+    subtitle: 'What to expect in the first week',
+    render: () => `
+      <div class="stat-row">
+        <div class="stat-pill">Wet nappies / 24h: <strong>8–12</strong></div>
+        <div class="stat-pill">Dirty nappies / 24h: <strong>0–12</strong></div>
+        <div class="stat-pill">Change frequency: <strong>~every 3 hours</strong></div>
+      </div>
+      <div class="section-label">Wet nappies &amp; hydration</div>
+      <ul>
+        <li>Fewer than <strong>6 wet nappies</strong> in 24 hours can indicate dehydration — as can dark, yellow urine</li>
+        <li>Urine should be <strong>almost colourless</strong>; nappies should feel heavy</li>
+        <li>More than <strong>8 wet nappies</strong> a day shows your baby is getting plenty of fluid</li>
+      </ul>
+      <div class="section-label">What dirty nappies look like</div>
+      <ul>
+        <li><strong>First few days:</strong> meconium — sticky, thick, black-green stools with very little smell; made of digested mucus that collected in the bowel while your baby was in the womb</li>
+        <li>As milk comes in, bowel movements gradually change to <strong>brown-yellow</strong> and may become 'explosive' — this takes another few days</li>
+      </ul>
+      <div class="diff-row">
+        <div class="diff-col left"><strong>🤱 Breastfed</strong>Light yellow and runny, looking much like French mustard</div>
+        <div class="diff-col right"><strong>🍼 Bottle-fed</strong>More solid and browner in colour</div>
+      </div>
+      <div class="info-box warm">
+        <strong>Handy tip</strong>
+        Peep in the leg-hole to see if he's dirty and needs changing — no need to undress him every time.
+      </div>
+    `
+  },
+  {
+    icon: '🛁',
+    title: 'Washing & Top and Tail',
+    subtitle: 'Daily face and bottom wash — no bath needed yet',
+    render: () => `
+      <div class="info-box green">
+        <strong>This week</strong>
+        You don't have to bath your baby this week, although you might like to if your midwife is around to show you how. But you should 'top and tail' every day — washing his face and bottom.
+      </div>
+      <div class="section-label">What you need</div>
+      <ul>
+        <li>Cotton wool and warm water — boiled and cooled is best, but tap water is okay</li>
+        <li><strong>Separate bowls</strong> for face and bottom; no soap or shampoo needed</li>
+        <li>Use <strong>100% cotton wool</strong> — more absorbent than mixed fibre; use it to dry him too</li>
+      </ul>
+      <div class="section-label">Step by step</div>
+      <ol class="steps">
+        <li>Wipe each eye with a <strong>separate piece</strong> of wet cotton wool</li>
+        <li>Clean the rest of the face — under the chin and behind the ears (not inside the ears)</li>
+        <li>Clean the scalp — dry with cotton wool; if he has a lot of hair, use a hairdryer on a cool, low setting</li>
+        <li>Make sure the <strong>face is dry</strong> before washing the bottom, so baby doesn't feel cold</li>
+        <li>Use the old nappy to wipe away any poo first, then clean around the bottom and creases with wet cotton wool</li>
+        <li>Dry the bottom with cotton wool</li>
+      </ol>
+      <div class="gender-grid">
+        <div class="gender-col boy"><strong>👦 Boys</strong>Wipe testicles and penis, but do not pull back the foreskin</div>
+        <div class="gender-col girl"><strong>👧 Girls</strong>Wipe front to back to avoid transferring bacteria from bowels to bladder; wipe genitals but don't pull open the labia</div>
+      </div>
+      <div class="info-box amber">
+        <strong>Avoid baby wipes for now</strong>
+        Even fragrance-free wipes contain chemicals, and your baby is still very young.
+      </div>
+    `
+  },
+  {
+    icon: '🌿',
+    title: 'Cord Stump',
+    subtitle: 'What to expect and how to care for it',
+    render: () => `
+      <ul>
+        <li>Newborns are usually sent home with a <strong>plastic clamp</strong> on their belly button, sealing off the umbilical cord</li>
+        <li>The newly tied cord can look quite <strong>raw</strong> and may be a bit moist — this is normal</li>
+        <li>After a few days the stump <strong>dries up and turns black</strong></li>
+        <li>It will drop off between <strong>one and four weeks</strong>, revealing a brand-new belly button</li>
+      </ul>
+      <div class="section-label">Care</div>
+      <ul>
+        <li>Fold the <strong>front of the nappy down</strong> to stop it rubbing the cord</li>
+        <li>Check the smell regularly — a <strong>mildly unpleasant</strong> smell is normal</li>
+      </ul>
+      <div class="info-box amber">
+        <strong>Watch for this</strong>
+        If the cord stump starts to smell really bad (beyond mildly unpleasant), contact your midwife.
+      </div>
+    `
+  },
+  {
+    icon: '🍼',
+    title: 'Feeding Requirements',
+    subtitle: 'How much and how often in Week 0',
+    render: () => `
+      <div class="stat-row">
+        <div class="stat-pill">Daily total: <strong>450–600 ml / 15–21 oz</strong></div>
+        <div class="stat-pill">Per feed: <strong>30–90 ml / 1–3 oz</strong></div>
+        <div class="stat-pill">Feeds per day: <strong>up to 12</strong></div>
+        <div class="stat-pill">Pattern: <strong>irregular</strong></div>
+      </div>
+      <div class="section-label">The approach this week</div>
+      <ul>
+        <li>Main goal: <strong>get feeding established</strong> — new babies need to learn what to do and will seem a bit confused and clumsy at first</li>
+        <li><strong>Feed on demand</strong>, whether breastfeeding or bottle-feeding — a newborn's stomach is very small and needs lots of little feeds</li>
+        <li>Offer milk every time he cries; <strong>forget a regular pattern</strong> for now</li>
+      </ul>
+      <div class="info-box amber">
+        <strong>No 4-hour schedule yet</strong>
+        Current thinking is not to push a newborn into a four-hour feeding pattern — he'll feel hungry on this regime.
+      </div>
+    `
+  },
+  {
+    icon: '🤱',
+    title: 'Breastfeeding & Milk Coming In',
+    subtitle: 'What happens before your milk flows freely',
+    render: () => `
+      <div class="info-box blue">
+        <strong>Timeline</strong>
+        Your baby may scream non-stop until your milk starts flowing freely — this can take up to <strong>day five</strong>. This is distressing but normal.
+      </div>
+      <div class="section-label">How to help your milk come in</div>
+      <ul>
+        <li>Let baby suckle <strong>often</strong> — this speeds up your milk reflex</li>
+        <li>Sucking makes <strong>prolactin</strong> — a hormone that triggers your milk supply and also calms babies</li>
+      </ul>
+      <div class="section-label">Avoid formula &amp; dummies while waiting</div>
+      <ul>
+        <li>If you don't put your baby to your breast often enough, it can <strong>interfere with milk production</strong> and delay it even more</li>
+        <li>If baby's tummy is full of formula, he may not be hungry enough to breastfeed as often — this can stop you producing enough milk</li>
+      </ul>
+      <div class="info-box green">
+        <strong>If you're worried</strong>
+        Speak to your midwife. Your baby won't starve — your midwife can give reassurance when she weighs him.
+      </div>
+      <div class="section-label">When it's going well</div>
+      <ul>
+        <li>When latched correctly, your baby will take <strong>long, peaceful gulps</strong> and will probably fall asleep at the breast, 'drunk' on milk</li>
+      </ul>
+    `
+  },
+  {
+    icon: '👶',
+    title: 'Latching On',
+    subtitle: 'Step-by-step technique for breastfeeding',
+    render: () => `
+      <div class="info-box warm">
+        <strong>Keep in mind</strong>
+        With practice, all babies can be taught to latch on. Be prepared for it to seem a bit fiddly — your baby may 'forget' from one feed to the next, and you may too, especially with little sleep.
+      </div>
+      <div class="section-label">Step by step</div>
+      <ol class="steps">
+        <li><strong>Cradle your baby on your lap</strong> — this gives you the most control. Use a pillow behind your lower back, and another on your lap to bring baby level with your breast.</li>
+        <li>Position baby in the <strong>'tummy to mummy, nose to nipple'</strong> position — his tummy actually touching you, with his nose in line with your nipple. Getting him snugly against you means he won't have to strain to feed.</li>
+        <li>Gently <strong>lift your breast</strong> towards his mouth and tickle his chin with your nipple until he opens his mouth really wide, then quickly pop your nipple in.</li>
+      </ol>
+      <div class="latch-check">
+        <div class="latch-ok"><strong>✓ Correct</strong>Mouth open wide; bottom lip is sticking out around the nipple</div>
+        <div class="latch-no"><strong>✗ Incorrect</strong>Mouth or lips look pinched — start again; he didn't open his mouth wide enough</div>
+      </div>
+      <div class="section-label">Getting help</div>
+      <ul>
+        <li>Ask nurses to show you at the hospital — keep asking, even on a busy ward</li>
+        <li>Your <strong>midwife will visit</strong> the day after you get home from hospital and can help with feeding</li>
+        <li>Watch videos on the <strong>Baby Buddy app</strong> and <strong>NHS Choices website</strong></li>
+        <li>Local breastfeeding cafés, drop-ins, or Facebook groups for breastfeeding mums</li>
+        <li>Helplines: National Breastfeeding Helpline, Breastfeeding Mothers, NCT, La Leche League UK</li>
+      </ul>
+      <div class="info-box warm" style="text-align:center; font-style:italic; font-size:15px;">
+        You made it through Week 0 🎉
+      </div>
+    `
+  }
+];
+
+let current = 0;
+
+function render() {
+  const total = cards.length;
+  const card = cards[current];
+
+  document.getElementById('counter').textContent = `Card ${current + 1} of ${total}`;
+  document.getElementById('progressBar').style.width = `${((current + 1) / total) * 100}%`;
+
+  const cardEl = document.getElementById('card');
+  cardEl.style.animation = 'none';
+  cardEl.offsetHeight;
+  cardEl.style.animation = '';
+  cardEl.innerHTML = `
+    <div class="card-header">
+      <div class="card-icon">${card.icon}</div>
+      <div>
+        <div class="card-title">${card.title}</div>
+        <div class="card-subtitle">${card.subtitle}</div>
+      </div>
+    </div>
+    <div class="card-body">${card.render()}</div>
+  `;
+
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+
+  document.querySelectorAll('.dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === current);
+  });
+
+  document.getElementById('counter').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function navigate(dir) {
+  current = Math.max(0, Math.min(cards.length - 1, current + dir));
+  render();
+}
+
+// Build dots
+const dotsEl = document.getElementById('dots');
+cards.forEach((_, i) => {
+  const dot = document.createElement('button');
+  dot.className = 'dot' + (i === 0 ? ' active' : '');
+  dot.setAttribute('aria-label', `Go to card ${i + 1}`);
+  dot.onclick = () => { current = i; render(); };
+  dotsEl.appendChild(dot);
+});
+
+render();
+</script>
+</body>
+</html>
