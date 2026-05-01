@@ -164,6 +164,99 @@
     color: var(--muted); padding-top: 6px;
   }
 
+  /* ── SEARCH ─────────────────────────────── */
+  .search-bar-wrapper {
+    padding: 22px 18px 0;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+  .search-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .search-icon {
+    position: absolute; left: 14px;
+    font-size: 14px; color: var(--muted); pointer-events: none;
+  }
+  .search-input {
+    width: 100%;
+    padding: 11px 38px 11px 42px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    background: var(--card-bg);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 14px;
+    color: var(--warm-brown);
+    box-shadow: 0 2px 8px var(--shadow);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+  .search-input::placeholder { color: var(--muted); font-style: italic; }
+  .search-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 2px 16px rgba(196,112,74,0.15);
+  }
+  .search-clear {
+    position: absolute; right: 12px;
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 18px; padding: 2px 4px;
+    display: none; line-height: 1; border-radius: 4px;
+  }
+  .search-clear.visible { display: block; }
+  .search-clear:hover { color: var(--accent); background: var(--accent-pale); }
+
+  .search-results {
+    display: none;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 14px 18px 0;
+  }
+  .search-results.visible { display: block; }
+  .search-results-label {
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 10px;
+  }
+  .search-result-item {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 13px 15px; margin-bottom: 8px;
+    cursor: pointer; transition: all 0.18s ease;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .search-result-item:hover, .search-result-item:active {
+    border-color: var(--accent-light);
+    box-shadow: 0 3px 16px var(--shadow);
+    transform: translateY(-1px);
+  }
+  .search-result-icon {
+    font-size: 17px; background: var(--accent-pale);
+    border: 1px solid var(--accent-light); border-radius: 8px;
+    width: 36px; height: 36px; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0;
+  }
+  .search-result-body { flex: 1; min-width: 0; }
+  .search-result-week {
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 2px;
+  }
+  .search-result-title {
+    font-size: 14px; font-weight: bold; color: var(--warm-brown); margin-bottom: 3px;
+  }
+  .search-result-excerpt {
+    font-size: 12.5px; color: var(--muted); line-height: 1.5;
+    display: -webkit-box; -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .search-result-excerpt mark {
+    background: rgba(196,112,74,0.18); color: var(--warm-brown);
+    border-radius: 2px; padding: 0 1px; font-style: normal;
+  }
+  .search-no-results {
+    text-align: center; padding: 32px 20px;
+    color: var(--muted); font-style: italic; font-size: 14px; line-height: 1.7;
+  }
+
   /* ── WEEK VIEW ───────────────────────────── */
   .week-nav-wrapper {
     display: flex; flex-direction: column; align-items: center;
@@ -344,6 +437,16 @@
 
 <!-- INDEX VIEW -->
 <div id="view-index">
+  <div class="search-bar-wrapper">
+    <div class="search-input-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="searchInput" type="text"
+        placeholder="Search all weeks…" autocomplete="off" autocorrect="off"
+        autocapitalize="off" spellcheck="false">
+      <button class="search-clear" id="searchClear" onclick="clearSearch()" aria-label="Clear">×</button>
+    </div>
+  </div>
+  <div class="search-results" id="searchResults"></div>
   <div class="index-main" id="index-main"></div>
 </div>
 
@@ -707,8 +810,7 @@ const WEEKS = {
           </div>`
       }
     ]
-  }
-};
+  },
 
   2: {
     title: "Settling Into a Rhythm",
@@ -1026,6 +1128,115 @@ function buildIndex() {
 }
 
 buildIndex();
+
+// ───────────────────────── Search ─────────────────────────────
+function stripHtml(html) {
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
+}
+
+// Build a flat index of every card across all weeks
+const SEARCH_INDEX = (() => {
+  const idx = [];
+  Object.keys(WEEKS).map(Number).sort((a, b) => a - b).forEach(n => {
+    WEEKS[n].cards.forEach((card, i) => {
+      idx.push({
+        weekNum: n,
+        cardIdx: i,
+        icon: card.icon,
+        title: card.title,
+        subtitle: card.subtitle,
+        text: stripHtml(card.content || '')
+      });
+    });
+  });
+  return idx;
+})();
+
+function getExcerpt(text, query, maxLen = 130) {
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const lower = text.toLowerCase();
+  let pos = -1;
+  for (const t of terms) { pos = lower.indexOf(t); if (pos !== -1) break; }
+  let start = Math.max(0, pos - 40);
+  let excerpt = (start > 0 ? '…' : '') + text.slice(start, start + maxLen) + (start + maxLen < text.length ? '…' : '');
+  terms.forEach(t => {
+    if (!t) return;
+    const re = new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+    excerpt = excerpt.replace(re, m => `<mark>${m}</mark>`);
+  });
+  return excerpt;
+}
+
+let searchTimer = null;
+
+function doSearch(raw) {
+  const query = raw.trim();
+  const resultsEl = document.getElementById('searchResults');
+  const mainEl    = document.getElementById('index-main');
+  const clearBtn  = document.getElementById('searchClear');
+
+  clearBtn.classList.toggle('visible', raw.length > 0);
+
+  if (!query) {
+    resultsEl.classList.remove('visible');
+    resultsEl.innerHTML = '';
+    mainEl.style.display = '';
+    return;
+  }
+
+  mainEl.style.display = 'none';
+  resultsEl.classList.add('visible');
+
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const hits = SEARCH_INDEX.filter(item => {
+    const hay = `${item.title} ${item.subtitle} ${item.text}`.toLowerCase();
+    return terms.every(t => hay.includes(t));
+  });
+
+  if (!hits.length) {
+    resultsEl.innerHTML = `
+      <div class="search-results-label">No results</div>
+      <div class="search-no-results">Nothing found for "<strong>${query}</strong>"<br>Try a different word</div>`;
+    return;
+  }
+
+  resultsEl.innerHTML = `<div class="search-results-label">${hits.length} result${hits.length !== 1 ? 's' : ''}</div>`;
+  hits.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'search-result-item';
+    div.innerHTML = `
+      <div class="search-result-icon">${item.icon}</div>
+      <div class="search-result-body">
+        <div class="search-result-week">Week ${item.weekNum}</div>
+        <div class="search-result-title">${item.title}</div>
+        <div class="search-result-excerpt">${getExcerpt(item.text || item.subtitle, query)}</div>
+      </div>`;
+    div.onclick = () => {
+      clearSearch();
+      showWeek(item.weekNum);
+      currentCard = item.cardIdx;
+      renderCard();
+    };
+    resultsEl.appendChild(div);
+  });
+}
+
+function clearSearch() {
+  const input = document.getElementById('searchInput');
+  input.value = '';
+  doSearch('');
+  input.focus();
+}
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => doSearch(e.target.value), 150);
+});
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Escape') clearSearch();
+});
 </script>
 </body>
 </html>
