@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Baby Week by Week</title>
+<title>Mini Babesu 🍼</title>
 <style>
   :root {
     --cream: #FDF6EE;
@@ -23,312 +23,1220 @@
     --gold-pale: #F5EDD8;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
   body {
     background: var(--cream);
     font-family: Georgia, 'Times New Roman', serif;
     color: var(--warm-brown);
     min-height: 100vh;
+    min-height: 100dvh;
   }
 
-  /* HEADER */
+  /* ── HEADER ─────────────────────────────── */
   .header {
     background: var(--warm-brown);
     background-image: radial-gradient(ellipse at 70% 50%, rgba(196,112,74,0.3) 0%, transparent 70%);
-    padding: 52px 24px 44px;
+    padding: 44px 24px 36px;
     text-align: center;
     color: var(--cream);
   }
-  .header .series-label {
+  .header-top-label {
     font-size: 11px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--accent-light);
-    margin-bottom: 12px;
-  }
-  .header h1 {
-    font-size: clamp(28px, 5vw, 42px);
-    font-weight: normal;
-    letter-spacing: -0.01em;
-    color: #FDF6EE;
     margin-bottom: 10px;
   }
-  .header .subtitle {
+  .header h1 {
+    font-size: clamp(24px, 5vw, 38px);
+    font-weight: normal;
+    color: #FDF6EE;
+    margin-bottom: 7px;
+  }
+  .header .header-sub {
     font-style: italic;
-    font-size: 15px;
-    color: rgba(253,246,238,0.6);
-    max-width: 400px;
-    margin: 0 auto;
+    font-size: 14px;
+    color: rgba(253,246,238,0.62);
   }
 
-  /* MAIN */
-  .main {
+  /* ── BACK BAR (week view only) ───────────── */
+  .back-bar {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--accent);
+    user-select: none;
+  }
+  .back-bar:hover { background: var(--accent-pale); }
+  .back-bar.visible { display: flex; }
+  .back-arrow { font-size: 15px; }
+
+  /* ── INDEX VIEW ──────────────────────────── */
+  #view-index { display: block; }
+  #view-week  { display: none; }
+
+  .index-main {
     max-width: 620px;
     margin: 0 auto;
-    padding: 40px 24px 60px;
+    padding: 32px 18px 60px;
   }
-
-  /* SECTION HEADING */
   .section-heading {
     font-size: 10px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
-
-  /* WEEK GRID */
   .week-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 14px;
-    margin-bottom: 40px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 12px;
+    margin-bottom: 36px;
   }
-
-  /* WEEK CARD — available */
   .week-card {
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 14px;
-    box-shadow: 0 2px 16px var(--shadow);
-    padding: 20px 22px;
-    text-decoration: none;
-    color: var(--warm-brown);
-    display: block;
-    transition: all 0.2s ease;
+    box-shadow: 0 2px 14px var(--shadow);
+    padding: 18px 20px;
+    cursor: pointer;
     position: relative;
     overflow: hidden;
+    transition: all 0.2s ease;
+    -webkit-user-select: none;
+    user-select: none;
   }
   .week-card::before {
     content: '';
     position: absolute;
     top: 0; left: 0;
-    width: 4px;
-    height: 100%;
+    width: 4px; height: 100%;
     background: var(--accent);
     border-radius: 4px 0 0 4px;
     opacity: 0;
     transition: opacity 0.2s ease;
   }
-  .week-card:hover {
+  .week-card:active, .week-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(92,61,46,0.13);
+    box-shadow: 0 5px 22px rgba(92,61,46,0.13);
     border-color: var(--accent-light);
   }
-  .week-card:hover::before {
-    opacity: 1;
+  .week-card:active::before, .week-card:hover::before { opacity: 1; }
+  .wc-num {
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 4px;
   }
-
-  .week-num {
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 5px;
-  }
-  .week-title {
-    font-size: 16px;
-    font-weight: bold;
-    color: var(--warm-brown);
-    margin-bottom: 4px;
-    line-height: 1.3;
-  }
-  .week-subtitle {
-    font-style: italic;
-    font-size: 12.5px;
-    color: var(--muted);
-    margin-bottom: 12px;
-    line-height: 1.4;
-  }
-  .week-topics {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-  }
+  .wc-title { font-size: 15px; font-weight: bold; margin-bottom: 3px; line-height: 1.3; }
+  .wc-sub   { font-style: italic; font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.4; }
+  .wc-topics { display: flex; flex-wrap: wrap; gap: 4px; }
   .topic-chip {
-    background: var(--accent-pale);
-    border: 1px solid var(--accent-light);
+    background: var(--accent-pale); border: 1px solid var(--accent-light);
+    border-radius: 12px; padding: 2px 8px; font-size: 10.5px;
+  }
+  .wc-arrow {
+    position: absolute; top: 18px; right: 16px;
+    color: var(--accent-light); font-size: 15px;
+    transition: transform 0.2s, color 0.2s;
+  }
+  .week-card:hover .wc-arrow, .week-card:active .wc-arrow {
+    transform: translateX(3px); color: var(--accent);
+  }
+  .week-card.soon {
+    background: var(--cream); border: 1px dashed var(--border);
+    box-shadow: none; opacity: 0.5; cursor: default; pointer-events: none;
+  }
+  .week-card.soon::before { display: none; }
+  .week-card.soon .wc-num, .week-card.soon .wc-title { color: var(--muted); }
+  .soon-badge {
+    display: inline-block; background: var(--border); color: var(--muted);
+    border-radius: 10px; padding: 2px 7px; font-size: 10px;
+    letter-spacing: 0.07em; text-transform: uppercase; margin-top: 7px;
+  }
+  .index-divider { height: 1px; background: var(--border); margin: 28px 0; }
+  .index-footer {
+    text-align: center; font-style: italic; font-size: 11px;
+    color: var(--muted); padding-top: 6px;
+  }
+
+  /* ── SEARCH ─────────────────────────────── */
+  .search-bar-wrapper {
+    padding: 22px 18px 0;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+  .search-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .search-icon {
+    position: absolute; left: 14px;
+    font-size: 14px; color: var(--muted); pointer-events: none;
+  }
+  .search-input {
+    width: 100%;
+    padding: 11px 38px 11px 42px;
+    border: 1.5px solid var(--border);
     border-radius: 12px;
-    padding: 3px 9px;
-    font-size: 11px;
+    background: var(--card-bg);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 14px;
     color: var(--warm-brown);
+    box-shadow: 0 2px 8px var(--shadow);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
   }
-  .week-arrow {
-    position: absolute;
-    top: 20px;
-    right: 18px;
-    color: var(--accent-light);
-    font-size: 16px;
-    transition: transform 0.2s ease, color 0.2s ease;
+  .search-input::placeholder { color: var(--muted); font-style: italic; }
+  .search-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 2px 16px rgba(196,112,74,0.15);
   }
-  .week-card:hover .week-arrow {
-    transform: translateX(3px);
-    color: var(--accent);
+  .search-clear {
+    position: absolute; right: 12px;
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 18px; padding: 2px 4px;
+    display: none; line-height: 1; border-radius: 4px;
+  }
+  .search-clear.visible { display: block; }
+  .search-clear:hover { color: var(--accent); background: var(--accent-pale); }
+
+  .search-results {
+    display: none;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 14px 18px 0;
+  }
+  .search-results.visible { display: block; }
+  .search-results-label {
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 10px;
+  }
+  .search-result-item {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 13px 15px; margin-bottom: 8px;
+    cursor: pointer; transition: all 0.18s ease;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .search-result-item:hover, .search-result-item:active {
+    border-color: var(--accent-light);
+    box-shadow: 0 3px 16px var(--shadow);
+    transform: translateY(-1px);
+  }
+  .search-result-icon {
+    font-size: 17px; background: var(--accent-pale);
+    border: 1px solid var(--accent-light); border-radius: 8px;
+    width: 36px; height: 36px; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0;
+  }
+  .search-result-body { flex: 1; min-width: 0; }
+  .search-result-week {
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 2px;
+  }
+  .search-result-title {
+    font-size: 14px; font-weight: bold; color: var(--warm-brown); margin-bottom: 3px;
+  }
+  .search-result-excerpt {
+    font-size: 12.5px; color: var(--muted); line-height: 1.5;
+    display: -webkit-box; -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .search-result-excerpt mark {
+    background: rgba(196,112,74,0.18); color: var(--warm-brown);
+    border-radius: 2px; padding: 0 1px; font-style: normal;
+  }
+  .search-no-results {
+    text-align: center; padding: 32px 20px;
+    color: var(--muted); font-style: italic; font-size: 14px; line-height: 1.7;
   }
 
-  /* WEEK CARD — coming soon */
-  .week-card.coming-soon {
-    background: var(--cream);
-    border: 1px dashed var(--border);
-    box-shadow: none;
-    opacity: 0.55;
-    cursor: default;
-    pointer-events: none;
+  /* ── WEEK VIEW ───────────────────────────── */
+  .week-nav-wrapper {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 26px 20px 0;
   }
-  .week-card.coming-soon::before { display: none; }
-  .week-card.coming-soon .week-num { color: var(--muted); }
-  .week-card.coming-soon .week-title { color: var(--muted); }
-  .week-card.coming-soon .week-arrow { display: none; }
-  .coming-badge {
-    display: inline-block;
-    background: var(--border);
-    color: var(--muted);
-    border-radius: 10px;
-    padding: 2px 8px;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-top: 8px;
+  .counter {
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 9px; scroll-margin-top: 16px;
+  }
+  .progress-bar-track {
+    width: min(540px, 94%); height: 3px; background: var(--border);
+    border-radius: 2px; margin-bottom: 20px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%; background: var(--accent); border-radius: 2px;
+    transition: width 0.35s ease;
+  }
+  .card-wrapper { display: flex; justify-content: center; padding: 0 18px; }
+  .card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 16px; box-shadow: 0 4px 24px var(--shadow);
+    width: min(540px, 100%); overflow: hidden;
+    animation: slideIn 0.28s ease forwards;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .card-header {
+    padding: 20px 24px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .card-icon {
+    font-size: 20px; background: var(--accent-pale);
+    border: 1px solid var(--accent-light); border-radius: 11px;
+    width: 42px; height: 42px; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0;
+  }
+  .card-title { font-size: 17px; font-weight: bold; line-height: 1.2; }
+  .card-subtitle { font-style: italic; font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+  .card-body { padding: 18px 24px 24px; }
+
+  /* ── CONTENT COMPONENTS ──────────────────── */
+  .stat-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 16px; }
+  .stat-pill {
+    background: var(--accent-pale); border: 1px solid var(--accent-light);
+    border-radius: 20px; padding: 5px 12px; font-size: 12.5px;
+  }
+  .stat-pill strong { color: var(--accent); }
+
+  ul { list-style: none; }
+  ul li {
+    padding: 9px 0 9px 19px; position: relative; font-size: 13.5px;
+    line-height: 1.65; border-bottom: 1px solid var(--border);
+  }
+  ul li:last-child { border-bottom: none; }
+  ul li::before {
+    content: '·'; color: var(--accent); position: absolute;
+    left: 3px; top: 8px; font-size: 20px; line-height: 1.3;
   }
 
-  /* DIVIDER */
-  .divider {
-    height: 1px;
-    background: var(--border);
-    margin: 32px 0;
+  ol.steps { list-style: none; counter-reset: steps; }
+  ol.steps li {
+    counter-increment: steps; padding: 9px 0 9px 40px;
+    position: relative; font-size: 13.5px; line-height: 1.65;
+    border-bottom: 1px solid var(--border);
+  }
+  ol.steps li:last-child { border-bottom: none; }
+  ol.steps li::before {
+    content: counter(steps); position: absolute; left: 0; top: 10px;
+    background: var(--accent); color: white; width: 24px; height: 24px;
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 11px;
   }
 
-  /* FOOTER */
-  footer {
-    text-align: center;
-    font-style: italic;
-    font-size: 11px;
-    color: var(--muted);
-    padding-top: 8px;
+  .info-box {
+    border-radius: 10px; padding: 13px 15px; font-size: 13px;
+    line-height: 1.6; margin-top: 13px;
+  }
+  .info-box strong {
+    display: block; margin-bottom: 3px; font-size: 10.5px;
+    letter-spacing: 0.09em; text-transform: uppercase;
+  }
+  .info-box.warm  { background: var(--accent-pale); border: 1px solid var(--accent-light); color: var(--warm-brown); }
+  .info-box.warm strong { color: var(--accent); }
+  .info-box.green { background: var(--green-pale); border: 1px solid #BDD4BD; color: #3A5A3A; }
+  .info-box.green strong { color: var(--green); }
+  .info-box.blue  { background: var(--blue-pale);  border: 1px solid #BDD0E0; color: #2A4A6A; }
+  .info-box.blue strong  { color: var(--blue); }
+  .info-box.amber { background: var(--gold-pale);  border: 1px solid #D4B87A; color: #5A4010; }
+  .info-box.amber strong { color: var(--gold); }
+
+  .diff-row { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 13px; }
+  .diff-col { border-radius: 10px; padding: 11px 13px; font-size: 12.5px; line-height: 1.6; }
+  .diff-col.left  { background: var(--blue-pale);  border: 1px solid #BDD0E0; color: #2A4A6A; }
+  .diff-col.right { background: var(--gold-pale);  border: 1px solid #D4B87A; color: #5A4010; }
+  .diff-col strong { display: block; font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 4px; }
+  .diff-col.left strong { color: var(--blue); }
+  .diff-col.right strong { color: var(--gold); }
+
+  .latch-check { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 13px; }
+  .latch-ok, .latch-no { border-radius: 10px; padding: 13px; font-size: 12.5px; line-height: 1.6; }
+  .latch-ok { background: var(--green-pale); border: 1px solid #BDD4BD; color: #3A5A3A; }
+  .latch-no { background: #FFF0F0; border: 1px solid #E0BDBD; color: #6A2A2A; }
+  .latch-ok strong, .latch-no strong { display: block; margin-bottom: 3px; font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; }
+
+  .gender-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 13px; }
+  .gender-col { border-radius: 10px; padding: 11px 13px; font-size: 12.5px; line-height: 1.6; }
+  .gender-col.boy  { background: #E8F0F7; border: 1px solid #BDD0E0; color: #2A4060; }
+  .gender-col.girl { background: #FBF0F5; border: 1px solid #E0BDCF; color: #6A2A50; }
+  .gender-col strong { display: block; font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 4px; }
+  .gender-col.boy strong  { color: var(--blue); }
+  .gender-col.girl strong { color: #C4608A; }
+
+  .section-label {
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted); margin: 16px 0 9px;
   }
 
+  /* ── WEEK NAV BUTTONS & DOTS ─────────────── */
+  .nav-buttons {
+    display: flex; justify-content: center; gap: 10px;
+    padding: 20px 20px 14px;
+  }
+  .btn {
+    font-family: Georgia, serif; font-size: 13.5px;
+    padding: 9px 24px; border-radius: 8px; cursor: pointer;
+    transition: all 0.2s ease; border: 2px solid var(--accent);
+    min-width: 90px;
+  }
+  .btn-outline { background: transparent; color: var(--accent); }
+  .btn-outline:hover:not(:disabled), .btn-outline:active:not(:disabled) {
+    background: var(--accent); color: white; transform: translateY(-1px);
+  }
+  .btn-solid { background: var(--accent); color: white; }
+  .btn-solid:hover:not(:disabled), .btn-solid:active:not(:disabled) {
+    background: #A85A38; transform: translateY(-1px);
+  }
+  .btn:disabled { opacity: 0.32; cursor: not-allowed; transform: none; }
+
+  .dots { display: flex; justify-content: center; gap: 7px; padding-bottom: 36px; }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--border);
+    cursor: pointer; transition: all 0.2s ease; border: none; padding: 0;
+  }
+  .dot.active { background: var(--accent); width: 10px; height: 10px; }
+  .dot:hover  { background: var(--accent-light); }
+
+  .week-footer {
+    text-align: center; font-style: italic; font-size: 11px;
+    color: var(--muted); padding: 0 20px 32px;
+  }
+
+  /* ── RESPONSIVE ──────────────────────────── */
   @media (max-width: 480px) {
+    .diff-row, .latch-check, .gender-grid { grid-template-columns: 1fr; }
     .week-grid { grid-template-columns: 1fr; }
-    .header { padding: 36px 20px 32px; }
-    .main { padding: 28px 16px 48px; }
+    .btn { padding: 8px 18px; font-size: 13px; }
+    .card-header { padding: 16px 18px 13px; }
+    .card-body { padding: 14px 18px 20px; }
   }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="series-label">Reference Guide</div>
-  <h1>Your Baby Week by Week</h1>
-  <p class="subtitle">Quick-reference cards for every week of your baby's first year</p>
+<!-- SHARED HEADER (dynamic) -->
+<div class="header" id="header">
+  <div class="header-top-label" id="header-label">Reference Guide</div>
+  <h1 id="header-title">Mini Babesu 🍼</h1>
+  <p class="header-sub" id="header-sub">Your baby, week by week</p>
 </div>
 
-<div class="main" id="main"></div>
+<!-- BACK BAR (visible in week view) -->
+<div class="back-bar" id="back-bar" onclick="showIndex()">
+  <span class="back-arrow">←</span>
+  <span>All weeks</span>
+</div>
+
+<!-- INDEX VIEW -->
+<div id="view-index">
+  <div class="search-bar-wrapper">
+    <div class="search-input-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="searchInput" type="text"
+        placeholder="Search all weeks…" autocomplete="off" autocorrect="off"
+        autocapitalize="off" spellcheck="false">
+      <button class="search-clear" id="searchClear" onclick="clearSearch()" aria-label="Clear">×</button>
+    </div>
+  </div>
+  <div class="search-results" id="searchResults"></div>
+  <div class="index-main" id="index-main"></div>
+</div>
+
+<!-- WEEK VIEW -->
+<div id="view-week">
+  <div class="week-nav-wrapper">
+    <div class="counter" id="counter">Card 1 of 1</div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progressBar"></div>
+    </div>
+  </div>
+  <div class="card-wrapper">
+    <div class="card" id="card"></div>
+  </div>
+  <div class="nav-buttons">
+    <button class="btn btn-outline" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="btn btn-solid"   id="nextBtn" onclick="navigate(1)">Next →</button>
+  </div>
+  <div class="dots" id="dots"></div>
+  <div class="week-footer"><em>Source: Your Baby Week by Week</em> — all content sourced directly from the book</div>
+</div>
 
 <script>
-// ─────────────────────────────────────────────
-// WEEKS CONFIG — update this array each time a
-// new week page is generated.
-// ─────────────────────────────────────────────
-const WEEKS = [
-  {
-    week: 0,
+// ═══════════════════════════════════════════════════════════════
+// WEEKS DATA — add new entries here as new pages are generated
+// ═══════════════════════════════════════════════════════════════
+const WEEKS = {
+  0: {
     title: "Your Newborn Has Arrived",
     subtitle: "The very first days at home",
     topics: ["Nappies", "Washing", "Cord Stump", "Feeding", "Breastfeeding", "Latching On"],
-    available: true
+    cards: [
+      {
+        icon: '🩹', title: 'Nappies', subtitle: 'What to expect in the first week',
+        content: `
+          <div class="stat-row">
+            <div class="stat-pill">Wet nappies / 24h: <strong>8–12</strong></div>
+            <div class="stat-pill">Dirty nappies / 24h: <strong>0–12</strong></div>
+            <div class="stat-pill">Change frequency: <strong>~every 3 hours</strong></div>
+          </div>
+          <div class="section-label">Wet nappies &amp; hydration</div>
+          <ul>
+            <li>Fewer than <strong>6 wet nappies</strong> in 24 hours can indicate dehydration — as can dark, yellow urine</li>
+            <li>Urine should be <strong>almost colourless</strong>; nappies should feel heavy</li>
+            <li>More than <strong>8 wet nappies</strong> a day shows your baby is getting plenty of fluid</li>
+          </ul>
+          <div class="section-label">What dirty nappies look like</div>
+          <ul>
+            <li><strong>First few days:</strong> meconium — sticky, thick, black-green stools with very little smell; made of digested mucus from the womb</li>
+            <li>As milk comes in, bowel movements gradually change to <strong>brown-yellow</strong> and may become 'explosive' — this takes another few days</li>
+          </ul>
+          <div class="diff-row">
+            <div class="diff-col left"><strong>🤱 Breastfed</strong>Light yellow and runny, looking much like French mustard</div>
+            <div class="diff-col right"><strong>🍼 Bottle-fed</strong>More solid and browner in colour</div>
+          </div>
+          <div class="info-box warm">
+            <strong>Handy tip</strong>
+            Peep in the leg-hole to see if he's dirty and needs changing — no need to undress him every time.
+          </div>`
+      },
+      {
+        icon: '🛁', title: 'Washing & Top and Tail', subtitle: 'Daily face and bottom wash — no bath needed yet',
+        content: `
+          <div class="info-box green">
+            <strong>This week</strong>
+            You don't have to bath your baby this week, although you might like to if your midwife is around to show you how. But you should 'top and tail' every day — washing his face and bottom.
+          </div>
+          <div class="section-label">What you need</div>
+          <ul>
+            <li>Cotton wool and warm water — boiled and cooled is best, but tap water is okay</li>
+            <li><strong>Separate bowls</strong> for face and bottom; no soap or shampoo needed</li>
+            <li>Use <strong>100% cotton wool</strong> — more absorbent than mixed fibre; use it to dry him too</li>
+          </ul>
+          <div class="section-label">Step by step</div>
+          <ol class="steps">
+            <li>Wipe each eye with a <strong>separate piece</strong> of wet cotton wool</li>
+            <li>Clean the rest of the face — under the chin and behind the ears (not inside the ears)</li>
+            <li>Clean the scalp — dry with cotton wool; if he has a lot of hair, use a hairdryer on a cool, low setting</li>
+            <li>Make sure the <strong>face is dry</strong> before washing the bottom, so baby doesn't feel cold</li>
+            <li>Use the old nappy to wipe away any poo first, then clean around the bottom and creases with wet cotton wool</li>
+            <li>Dry the bottom with cotton wool</li>
+          </ol>
+          <div class="gender-grid">
+            <div class="gender-col boy"><strong>👦 Boys</strong>Wipe testicles and penis, but do not pull back the foreskin</div>
+            <div class="gender-col girl"><strong>👧 Girls</strong>Wipe front to back; wipe genitals but don't pull open the labia</div>
+          </div>
+          <div class="info-box amber">
+            <strong>Avoid baby wipes for now</strong>
+            Even fragrance-free wipes contain chemicals, and your baby is still very young.
+          </div>`
+      },
+      {
+        icon: '🌿', title: 'Cord Stump', subtitle: 'What to expect and how to care for it',
+        content: `
+          <ul>
+            <li>Newborns are usually sent home with a <strong>plastic clamp</strong> on their belly button, sealing off the umbilical cord</li>
+            <li>The newly tied cord can look quite <strong>raw</strong> and may be a bit moist — this is normal</li>
+            <li>After a few days the stump <strong>dries up and turns black</strong></li>
+            <li>It will drop off between <strong>one and four weeks</strong>, revealing a brand-new belly button</li>
+          </ul>
+          <div class="section-label">Care</div>
+          <ul>
+            <li>Fold the <strong>front of the nappy down</strong> to stop it rubbing the cord</li>
+            <li>Check the smell regularly — a <strong>mildly unpleasant</strong> smell is normal</li>
+          </ul>
+          <div class="info-box amber">
+            <strong>Watch for this</strong>
+            If the cord stump starts to smell really bad (beyond mildly unpleasant), contact your midwife.
+          </div>`
+      },
+      {
+        icon: '🍼', title: 'Feeding Requirements', subtitle: 'How much and how often in Week 0',
+        content: `
+          <div class="stat-row">
+            <div class="stat-pill">Daily total: <strong>450–600 ml / 15–21 oz</strong></div>
+            <div class="stat-pill">Per feed: <strong>30–90 ml / 1–3 oz</strong></div>
+            <div class="stat-pill">Feeds per day: <strong>up to 12</strong></div>
+            <div class="stat-pill">Pattern: <strong>irregular</strong></div>
+          </div>
+          <div class="section-label">The approach this week</div>
+          <ul>
+            <li>Main goal: <strong>get feeding established</strong> — new babies need to learn what to do and will seem a bit confused and clumsy at first</li>
+            <li><strong>Feed on demand</strong>, whether breastfeeding or bottle-feeding — a newborn's stomach is very small and needs lots of little feeds</li>
+            <li>Offer milk every time he cries; <strong>forget a regular pattern</strong> for now</li>
+          </ul>
+          <div class="info-box amber">
+            <strong>No 4-hour schedule yet</strong>
+            Current thinking is not to push a newborn into a four-hour feeding pattern — he'll feel hungry on this regime.
+          </div>`
+      },
+      {
+        icon: '🤱', title: 'Breastfeeding & Milk Coming In', subtitle: 'What happens before your milk flows freely',
+        content: `
+          <div class="info-box blue">
+            <strong>Timeline</strong>
+            Your baby may scream non-stop until your milk starts flowing freely — this can take up to <strong>day five</strong>. This is distressing but normal.
+          </div>
+          <div class="section-label">How to help your milk come in</div>
+          <ul>
+            <li>Let baby suckle <strong>often</strong> — this speeds up your milk reflex</li>
+            <li>Sucking makes <strong>prolactin</strong> — a hormone that triggers your milk supply and also calms babies</li>
+          </ul>
+          <div class="section-label">Avoid formula &amp; dummies while waiting</div>
+          <ul>
+            <li>If you don't put your baby to your breast often enough, it can <strong>interfere with milk production</strong> and delay it even more</li>
+            <li>If baby's tummy is full of formula, he may not be hungry enough to breastfeed as often — this can stop you producing enough milk</li>
+          </ul>
+          <div class="info-box green">
+            <strong>If you're worried</strong>
+            Speak to your midwife. Your baby won't starve — your midwife can give reassurance when she weighs him.
+          </div>
+          <div class="section-label">When it's going well</div>
+          <ul>
+            <li>When latched correctly, your baby will take <strong>long, peaceful gulps</strong> and will probably fall asleep at the breast, 'drunk' on milk</li>
+          </ul>`
+      },
+      {
+        icon: '👶', title: 'Latching On', subtitle: 'Step-by-step technique for breastfeeding',
+        content: `
+          <div class="info-box warm">
+            <strong>Keep in mind</strong>
+            With practice, all babies can be taught to latch on. Be prepared for it to seem a bit fiddly — your baby may 'forget' from one feed to the next, and you may too, especially with little sleep.
+          </div>
+          <div class="section-label">Step by step</div>
+          <ol class="steps">
+            <li><strong>Cradle your baby on your lap</strong> — this gives you the most control. Use a pillow behind your lower back, and another on your lap to bring baby level with your breast.</li>
+            <li>Position baby in the <strong>'tummy to mummy, nose to nipple'</strong> position — his tummy actually touching you, with his nose in line with your nipple. Getting him snugly against you means he won't have to strain to feed.</li>
+            <li>Gently <strong>lift your breast</strong> towards his mouth and tickle his chin with your nipple until he opens his mouth really wide, then quickly pop your nipple in.</li>
+          </ol>
+          <div class="latch-check">
+            <div class="latch-ok"><strong>✓ Correct</strong>Mouth open wide; bottom lip is sticking out around the nipple</div>
+            <div class="latch-no"><strong>✗ Incorrect</strong>Mouth or lips look pinched — start again; he didn't open his mouth wide enough</div>
+          </div>
+          <div class="section-label">Getting help</div>
+          <ul>
+            <li>Ask nurses to show you at the hospital — keep asking, even on a busy ward</li>
+            <li>Your <strong>midwife will visit</strong> the day after you get home from hospital and can help with feeding</li>
+            <li>Watch videos on the <strong>Baby Buddy app</strong> and <strong>NHS Choices website</strong></li>
+            <li>Helplines: National Breastfeeding Helpline, Breastfeeding Mothers, NCT, La Leche League UK</li>
+          </ul>
+          <div class="info-box warm" style="text-align:center;font-style:italic;font-size:14px;">
+            You made it through Week 0 🎉
+          </div>`
+      }
+    ]
   },
-  {
-    week: 1,
+
+  1: {
     title: "Finding Your Feet",
     subtitle: "Nappies, first baths, feeding, and sleep",
     topics: ["Nappies", "First Bath", "Feeding", "Breastfeeding", "Sleep", "SIDS", "Development"],
-    available: true
+    cards: [
+      {
+        icon: '🩹', title: 'Nappies', subtitle: 'Over 100 changes by the end of this week',
+        content: `
+          <div class="stat-row">
+            <div class="stat-pill">Wet nappies / 24h: <strong>8–12</strong></div>
+            <div class="stat-pill">Dirty nappies / 24h: <strong>0–12</strong></div>
+          </div>
+          <div class="section-label">What's normal this week</div>
+          <ul>
+            <li>His kidneys are still immature — he produces <strong>high volumes of dilute urine</strong>; his immature bowels mean he may go after every feed, or just once every other day — both patterns are normal</li>
+            <li><strong>Best tip:</strong> keep a roll of kitchen paper next to the changing table — he's extremely likely to wee or poo mid-change</li>
+            <li>You don't have to change his nappy at every night feed if he's feeding more than every three hours, has only done a very small poo, and hasn't got nappy rash</li>
+          </ul>
+          <div class="gender-grid">
+            <div class="gender-col boy"><strong>👦 Boys</strong>Tuck his penis downwards in the nappy to avoid him weeing out of the top and over his clothes</div>
+            <div class="gender-col girl"><strong>👧 Girls</strong>A white vaginal discharge — possibly bloodstained — in the first few weeks is normal; simply caused by mum's hormones</div>
+          </div>
+          <div class="section-label">Nappy bag — what to pack</div>
+          <ul>
+            <li>One nappy for every hour you intend to be out</li>
+            <li>Baby wipes, something to dry his bottom, nappy bags, a change of clothes, a changing mat, bibs and muslin squares</li>
+            <li><strong>If breastfeeding:</strong> breast pads and nipple cream</li>
+            <li><strong>If bottle-feeding:</strong> at least one disposable bottle and a carton of ready-to-feed milk</li>
+          </ul>`
+      },
+      {
+        icon: '🛁', title: 'First Bath', subtitle: 'This week you can start bathing every few days',
+        content: `
+          <div class="info-box blue">
+            <strong>The aim</strong>
+            The first bath isn't about getting super clean — it's simply to get your baby used to being in water and to give you a bit of practice. You should feel confident and relaxed after about half a dozen times.
+          </div>
+          <div class="section-label">Equipment &amp; setup</div>
+          <ul>
+            <li>Use a baby bath, or the big bath with a <strong>rubber mat</strong>, bath seat, or deckchair-shaped bath support</li>
+            <li>Keep the bath <strong>shallow — just 5–8 cm / 2–3 in deep</strong></li>
+            <li>Test water temperature with your wrist or elbow; ideal temp is around <strong>37°C / 98.6°F</strong></li>
+            <li><strong>Always put cold water in first</strong> — most burns in young children happen when parents forget this step</li>
+          </ul>
+          <div class="section-label">Technique</div>
+          <ol class="steps">
+            <li>Undress down to his nappy and wrap in a towel; make final temperature adjustments</li>
+            <li>Remove his nappy; clean any poo while keeping his top half covered with the towel</li>
+            <li>Lower slowly, <strong>semi-upright</strong> — one hand around shoulders and under armpit, the other under his bottom</li>
+            <li>Wash with a face cloth and water only — <strong>no soap or shampoo</strong>; rub face, hair, chin, armpits, hands, then bottom</li>
+            <li>Keep the bath short — take him out after a couple of minutes; have a towel ready on the floor</li>
+          </ol>
+          <div class="section-label">If your baby hates his bath</div>
+          <ul>
+            <li>After about <strong>six baths</strong> he'll probably begin to enjoy it</li>
+            <li>Try wrapping him in a <strong>muslin cloth</strong> in the water — helps him feel secure</li>
+            <li>Aim for about <strong>half an hour after a feed</strong>, when he's more alert; morning works well</li>
+            <li>Stay relaxed — keep soothing and smiling at him; keep bathtime very short (<strong>20 seconds</strong> if very distressed)</li>
+          </ul>`
+      },
+      {
+        icon: '🍼', title: 'Feeding Requirements', subtitle: 'How much milk your baby needs this week',
+        content: `
+          <div class="stat-row">
+            <div class="stat-pill">Daily total: <strong>540–690 ml / 19–24 oz</strong></div>
+            <div class="stat-pill">Per feed: <strong>up to 90 ml / 3 oz</strong></div>
+            <div class="stat-pill">Feeds per day: <strong>up to 12</strong></div>
+            <div class="stat-pill">Pattern: <strong>irregular</strong></div>
+          </div>
+          <div class="section-label">This week's approach</div>
+          <ul>
+            <li>Continue <strong>demand-feeding</strong> — sometimes four hours between feeds, other times a top-up after just an hour</li>
+            <li>Bottle-fed babies should be taking <strong>60–90 ml / 2–3 oz per feed</strong> — still too early for a routine</li>
+          </ul>
+          <div class="info-box warm">
+            <strong>Fore milk &amp; hind milk</strong>
+            If your baby slows and sucks sporadically towards the end of a breastfeed, he's moved from 'fore' milk (thirst-quenching) to 'hind' milk (richer and more filling). Don't rush to end the feed or switch breasts.
+          </div>
+          <div class="section-label">Sterilising bottles</div>
+          <ul>
+            <li><strong>Boiling:</strong> submerge in a large saucepan for at least 10 minutes; no trapped air bubbles; set a timer; keep the lid on until ready to use; check teats regularly</li>
+            <li><strong>Electric steamer:</strong> up to 6 bottles; some models take just 5 minutes</li>
+            <li><strong>Microwave steamer:</strong> up to 4 bottles; up to 8 minutes; cheaper and smaller</li>
+          </ul>`
+      },
+      {
+        icon: '🤱', title: 'Breastfeeding Challenges', subtitle: 'Sore nipples and milk supply — what to do',
+        content: `
+          <div class="section-label">Sore &amp; cracked nipples</div>
+          <ul>
+            <li>Cracked, blistered and bleeding nipples are <strong>extremely common</strong> in the early stages</li>
+            <li>The most likely cause is <strong>poor latch</strong> — ensure his lips cover your areola and his mouth is open wide</li>
+            <li>If it feels uncomfortable, stop immediately — you can get a blister after just <strong>15 minutes</strong>; slide your finger in to break the suction</li>
+            <li>Keep breastfeeding through the pain — otherwise your milk will dry up; breastfeeding <strong>'toughens up'</strong> your nipples over time</li>
+          </ul>
+          <div class="info-box warm">
+            <strong>Pain relief options</strong>
+            Lansinoh HPA Lanolin nipple cream (no need to remove before feeding); Vaseline; paracetamol with codeine 15 minutes before a feed; ibuprofen if suitable.
+          </div>
+          <div class="info-box amber">
+            <strong>Nipple shields — last resort</strong>
+            Instantly less painful, but shields reduce milk production and your baby may struggle to go back to feeding directly. Limit to every other feed if possible.
+          </div>
+          <div class="section-label">Insufficient milk — how to boost supply</div>
+          <ul>
+            <li>If baby is <strong>gaining weight</strong> with plenty of wet and dirty nappies, you have enough milk</li>
+            <li><strong>Express after every daytime feed</strong> for a week — you'll quickly produce more</li>
+            <li>Feed on demand, offering <strong>both breasts</strong>; drink at least <strong>3 litres of water a day</strong></li>
+            <li><strong>Don't smoke</strong> — this reduces milk production and affects your let-down reflex</li>
+          </ul>`
+      },
+      {
+        icon: '😴', title: 'Sleep & Day/Night Rhythms', subtitle: 'Helping your baby tell day from night',
+        content: `
+          <div class="info-box blue">
+            <strong>This week</strong>
+            Your baby's body clock hasn't yet been set. Towards the end of the week you'll notice he sleeps for slightly longer before waking for a feed.
+          </div>
+          <div class="diff-row">
+            <div class="diff-col left">
+              <strong>🌙 Night — keep it boring</strong>
+              Low lights only; don't talk; avoid eye contact. He'll be comforted by your smell and touch.
+            </div>
+            <div class="diff-col right">
+              <strong>☀️ Day — keep it lively</strong>
+              Don't let him sleep more than <strong>3 hours</strong> at a time; open the curtains; feel free to use the TV, washing machine and phone.
+            </div>
+          </div>
+          <div class="section-label">Waking your baby gently</div>
+          <ul>
+            <li>Rock him, talk to him, or change his nappy — it's important he feeds regularly during the day</li>
+          </ul>
+          <div class="section-label">Excessive crying</div>
+          <ul>
+            <li>A perfectly healthy baby can cry for up to <strong>12 hours</strong> non-stop — always try milk first</li>
+            <li>If feeding, burping, rocking, and nappy changing don't work, see your <strong>GP or midwife</strong></li>
+            <li>Relatives and friends with baby experience are invaluable — don't feel bad if your baby stops crying the instant someone else takes him</li>
+          </ul>`
+      },
+      {
+        icon: '🩺', title: 'SIDS & Safe Sleeping', subtitle: 'What you need to know about cot death',
+        content: `
+          <div class="info-box amber">
+            <strong>⚠️ Safety tip of the week</strong>
+            Always put your baby to sleep on his <strong>back</strong>, day and night. This has been shown to significantly reduce the risk of SIDS. Make sure babysitters and grandparents do the same — older people are more likely to wrongly think it's okay to put a baby on his front.
+          </div>
+          <div class="section-label">The facts about SIDS</div>
+          <ul>
+            <li>SIDS (formerly cot death) is now <strong>rare</strong> — fewer than 200 babies in the UK every year</li>
+            <li>It <strong>peaks at two and three months</strong>, then drops off quickly; it hardly ever occurs after six months</li>
+            <li>The cause is not known; it may be related to how well a baby's body controls <strong>breathing, temperature, and heart rate</strong></li>
+            <li>Babies born <strong>prematurely</strong> or with a <strong>low birth weight</strong> may be more prone</li>
+          </ul>
+          <div class="info-box green">
+            <strong>Reassurance</strong>
+            SIDS is now rare — fewer than 200 cases a year in the UK. Back sleeping is the single most important thing you can do to reduce the risk.
+          </div>`
+      },
+      {
+        icon: '🌱', title: 'Development', subtitle: 'What your baby can do this week',
+        content: `
+          <ul>
+            <li>Your baby will start to <strong>recognise your face</strong> — studies show that parents' faces trigger feelings of pleasure and calm in babies</li>
+            <li>He'll stare at your face but won't be very good at <strong>making eye contact</strong> at this stage</li>
+            <li>He <strong>can't control his head yet</strong> — when lying down, it rests to one side; always support his head when holding him</li>
+            <li>When held in your arms, you may notice <strong>tiny head movements</strong> as he tries to watch your face — even this small effort strengthens his muscles</li>
+          </ul>
+          <div class="info-box warm">
+            <strong>What you can do</strong>
+            Spend time holding him and letting him look at your face — this is the most stimulating thing for him right now.
+          </div>
+          <div class="info-box warm" style="text-align:center;font-style:italic;font-size:14px;margin-top:16px;">
+            You made it through Week 1 🎉
+          </div>`
+      }
+    ]
   },
-  {
-    week: 2,
+
+  2: {
     title: "Settling Into a Rhythm",
     subtitle: "Sleep, swaddling, crying, and growing",
     topics: ["Feeding", "Sleep & Swaddling", "Crying", "Nappy Rash", "Skin Care", "Weight", "Development"],
-    available: true
+    cards: [
+      {
+        icon: '🍼', title: 'Feeding', subtitle: 'Slightly more milk, hints of a pattern',
+        content: `
+          <div class="stat-row">
+            <div class="stat-pill">Daily total: <strong>600–750 ml / 21–26 oz</strong></div>
+            <div class="stat-pill">Per feed: <strong>up to 105 ml / 3.5 oz</strong></div>
+            <div class="stat-pill">Feeds per day: <strong>7–10</strong></div>
+          </div>
+          <div class="section-label">Pattern this week</div>
+          <ul>
+            <li>You may notice the <strong>early signs of feeding every three hours</strong> — but don't push him into this pattern yet; he still needs to be fed on demand</li>
+            <li>A clear feeding pattern probably won't emerge until around <strong>week 12</strong></li>
+          </ul>
+          <div class="section-label">Growth spurt (~3 weeks)</div>
+          <ul>
+            <li>Many babies go through a <strong>growth spurt</strong> around this time — lasting <strong>up to two days</strong></li>
+            <li>Your baby will seem <strong>particularly hungry and a bit irritable</strong>; milk supply will adjust to increased demands</li>
+            <li>Whether breastfeeding or bottle-feeding, <strong>continue following his demands</strong></li>
+          </ul>
+          <div class="info-box warm">
+            <strong>How to time feeds</strong>
+            Count from the <strong>beginning</strong> of one feed to the <strong>beginning</strong> of the next. If a feed starts at 2pm and the next at 5pm, that's every three hours. If possible, ask someone to help with winding and nappy changes to give you a break.
+          </div>`
+      },
+      {
+        icon: '😴', title: 'Sleep & Swaddling', subtitle: 'Why swaddling helps — and how to do it safely',
+        content: `
+          <div class="stat-row">
+            <div class="stat-pill">Total sleep needed: <strong>15–18 hours / day</strong></div>
+            <div class="stat-pill">Pattern: <strong>irregular</strong></div>
+          </div>
+          <div class="section-label">Why baby wakes more easily now</div>
+          <ul>
+            <li>He's <strong>more aware of his surroundings</strong> — doesn't sleep as much as when first born, and wakes more easily (e.g. if you make a noise or tuck his blankets in)</li>
+          </ul>
+          <div class="section-label">Why swaddling works</div>
+          <ul>
+            <li>Stops his arms <strong>jerking about</strong>, which can wake him up</li>
+            <li>Reminds him of the <strong>confined space inside the womb</strong> — makes him feel safe and secure</li>
+            <li>After a few days he <strong>recognises being wrapped as a signal</strong> it's time to sleep</li>
+            <li>Can <strong>calm irritability</strong> and keeps him on his back, reducing SIDS risk</li>
+            <li>If your baby dislikes being swaddled and seems angry, <strong>just leave it</strong></li>
+          </ul>
+          <div class="section-label">How to swaddle</div>
+          <ol class="steps">
+            <li>Take a muslin cloth or cellular blanket and <strong>fold the upper corner down</strong></li>
+            <li>Lie your baby on the blanket with his <strong>neck at the centre of the fold</strong></li>
+            <li>Pull the <strong>far right corner</strong> across over his left arm and tuck it under his right buttock — his left arm should be snugly by his side</li>
+            <li>Do the <strong>same with the opposite side</strong></li>
+          </ol>
+          <div class="info-box amber">
+            <strong>⚠️ Two swaddling hazards</strong>
+            <strong>Stop after week 8</strong> if he can kick off the swaddle — a loose blanket can suffocate. <strong>Overheating</strong> is also a risk and linked with SIDS. NEVER cover his head or face.
+          </div>`
+      },
+      {
+        icon: '💛', title: 'Crying & Soothing', subtitle: 'Why he cries and what actually helps',
+        content: `
+          <div class="stat-row">
+            <div class="stat-pill">Crying per day: <strong>2–5 hours</strong></div>
+          </div>
+          <div class="section-label">Why he cries (it's not just hunger)</div>
+          <ul>
+            <li>His brain is too <strong>immature to distinguish</strong> between pain and other sensations — needing to poo, pass wind, burp, or wee all translate as discomfort</li>
+            <li><strong>Giveaway sign of wind or needing to poo:</strong> goes red in the face and grimaces — pick him up and comfort him</li>
+          </ul>
+          <div class="info-box green">
+            <strong>Responding quickly pays off</strong>
+            Most experts now agree that responding quickly will result in <strong>less crying in the months to come</strong> as he'll feel more secure. It's no longer thought that parents should let babies cry it out at this stage.
+          </div>
+          <div class="section-label">Baby carriers &amp; slings</div>
+          <ul>
+            <li>Nestled against you, lulled to sleep by movement, warm, can hear you talking and breathing</li>
+            <li>Studies show babies carried for <strong>at least 3 hours a day</strong> are more content and cry less in the first 12 weeks</li>
+          </ul>
+          <div class="info-box amber">
+            <strong>Sling safety</strong>
+            Practise before putting baby in. The <strong>safest slings keep baby upright, chin off chest</strong>, and allow you to see him at all times. See the ROSPA website for a full safety guide.
+          </div>`
+      },
+      {
+        icon: '🩹', title: 'Nappy Rash', subtitle: 'Common this week — act quickly',
+        content: `
+          <div class="stat-row">
+            <div class="stat-pill">Wet nappies / 24h: <strong>6–10</strong></div>
+            <div class="stat-pill">Dirty nappies / 24h: <strong>0–10</strong></div>
+          </div>
+          <div class="info-box amber">
+            <strong>Act fast</strong>
+            Nappy rash is common now. Some babies' bottoms can bleed within just a few hours — but a few hours of correct treatment can make a noticeable improvement, as babies' skin heals faster than adults'.
+          </div>
+          <div class="section-label">Cause</div>
+          <ul>
+            <li>Urine broken down by <strong>bacteria in poo</strong> forms <strong>ammonia</strong> — this burns the skin; constant pooing at this age makes it worse</li>
+          </ul>
+          <div class="section-label">Prevention</div>
+          <ul>
+            <li><strong>Change immediately</strong> after every poo; clean thoroughly; be <strong>meticulous about drying</strong></li>
+            <li>Use a <strong>barrier cream</strong> if prone — delays ammonia reaching the skin</li>
+          </ul>
+          <div class="section-label">Treatment</div>
+          <ul>
+            <li>At the first sign: <strong>Sudocrem or Drapolene</strong> — apply a <strong>thin film only</strong></li>
+            <li><strong>Nappy-free time</strong>: 5 minutes helps, a couple of hours is much more effective; keep a clean nappy under him</li>
+            <li>For <strong>persistent</strong> rash: try <strong>Metanium Nappy Rash Ointment</strong> (titanium-based)</li>
+          </ul>`
+      },
+      {
+        icon: '🛁', title: 'Washing & Skin Care', subtitle: 'Bath products, massage, and baby acne',
+        content: `
+          <div class="section-label">Bathing this week</div>
+          <ul>
+            <li>Try <strong>baby shampoo</strong> for hair, bottom, and under his chin — use it <strong>every other bath</strong> to avoid drying out his skin</li>
+            <li>Don't forget his <strong>armpits</strong> — he'll clamp his arms down; a cheesy smell can develop if they're not cleaned and dried properly</li>
+          </ul>
+          <div class="section-label">Post-bath massage</div>
+          <ul>
+            <li>Massage with <strong>olive oil or grapeseed oil</strong> (from pharmacies) — helps bonding and relaxation</li>
+            <li>Try <strong>clockwise circles on his tummy</strong> or soft sweeping strokes on his arms or legs</li>
+            <li>Keep him <strong>covered with a towel</strong>; play it by ear — he'll let you know when he's had enough</li>
+            <li>Oils make his skin <strong>slippery</strong> — take care when lifting him</li>
+          </ul>
+          <div class="section-label">Baby acne</div>
+          <ul>
+            <li>May develop now — caused by <strong>mum's hormones</strong> still in his system; clears up by <strong>week 12</strong></li>
+            <li>Wash with cotton wool and water, pat dry — <strong>no lotions, don't squeeze spots</strong>; no scarring if you don't tamper</li>
+          </ul>`
+      },
+      {
+        icon: '⚖️', title: 'Weight & Centile Chart', subtitle: 'Your health visitor visit this week',
+        content: `
+          <div class="info-box blue">
+            <strong>This week</strong>
+            Your health visitor will plot your baby's weight and length in the Red Book, so you can see how your two-week-old compares with other babies of the same age.
+          </div>
+          <div class="section-label">How centiles work</div>
+          <ul>
+            <li><strong>50th centile</strong> = exactly in the middle</li>
+            <li><strong>25th centile</strong> = 75 babies the same age weigh more, 25 weigh less</li>
+          </ul>
+          <div class="info-box green">
+            <strong>Don't worry about the number</strong>
+            For every 100 children measured, only one falls exactly on the 50th centile — the rest are spread across the chart. It's really not worth worrying about.
+          </div>`
+      },
+      {
+        icon: '🌱', title: 'Development', subtitle: 'Growing and finding his voice',
+        content: `
+          <ul>
+            <li>Your baby will suddenly look <strong>taller</strong> as he uncurls from his foetal position and loses his newborn appearance — though his legs will still be bent</li>
+            <li>He'll make noises that sound like a <strong>cross between crying and shouting</strong> — this is the <strong>first stage of language development</strong>, practising his vowel sounds</li>
+          </ul>
+          <div class="info-box warm" style="text-align:center;font-style:italic;font-size:14px;margin-top:16px;">
+            You made it through Week 2 🎉
+          </div>`
+      }
+    ]
   }
-];
+};
 
-// ─────────────────────────────────────────────
-// COMING-SOON PLACEHOLDERS
-// Shows a preview of upcoming weeks not yet built.
-// ─────────────────────────────────────────────
+// Weeks not yet built — show as placeholders
 const COMING_SOON = [3, 4, 5, 6, 7, 8];
 
-// ─────────────────────────────────────────────
-// RENDER
-// ─────────────────────────────────────────────
-const main = document.getElementById('main');
+// ───────────────────────────── Router ─────────────────────────
+let currentCard = 0;
+let currentWeek = null;
 
-// Available weeks
-const availableWeeks = WEEKS.filter(w => w.available);
-if (availableWeeks.length > 0) {
-  const heading = document.createElement('div');
-  heading.className = 'section-heading';
-  heading.textContent = `${availableWeeks.length} week${availableWeeks.length !== 1 ? 's' : ''} available`;
-  main.appendChild(heading);
+function showIndex() {
+  currentWeek = null;
+  document.getElementById('view-index').style.display = 'block';
+  document.getElementById('view-week').style.display = 'none';
+  document.getElementById('back-bar').classList.remove('visible');
+  document.getElementById('header-label').textContent = 'Reference Guide';
+  document.getElementById('header-title').textContent = 'Mini Babesu 🍼';
+  document.getElementById('header-sub').textContent = 'Your baby, week by week';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-  const grid = document.createElement('div');
-  grid.className = 'week-grid';
+function showWeek(weekNum) {
+  const week = WEEKS[weekNum];
+  if (!week) return;
+  currentWeek = weekNum;
+  currentCard = 0;
 
-  availableWeeks.forEach(w => {
-    const a = document.createElement('a');
-    a.className = 'week-card';
-    a.href = `week-${w.week}.html`;
-    a.innerHTML = `
-      <div class="week-num">Week ${w.week}</div>
-      <div class="week-title">${w.title}</div>
-      <div class="week-subtitle">${w.subtitle}</div>
-      <div class="week-topics">
-        ${w.topics.map(t => `<span class="topic-chip">${t}</span>`).join('')}
+  document.getElementById('view-index').style.display = 'none';
+  document.getElementById('view-week').style.display = 'block';
+  document.getElementById('back-bar').classList.add('visible');
+
+  document.getElementById('header-label').textContent = `Week ${weekNum}`;
+  document.getElementById('header-title').textContent = week.title;
+  document.getElementById('header-sub').textContent = week.subtitle;
+
+  // Build dots
+  const dotsEl = document.getElementById('dots');
+  dotsEl.innerHTML = '';
+  week.cards.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', `Go to card ${i + 1}`);
+    dot.onclick = () => { currentCard = i; renderCard(); };
+    dotsEl.appendChild(dot);
+  });
+
+  renderCard();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderCard() {
+  const week = WEEKS[currentWeek];
+  const total = week.cards.length;
+  const card = week.cards[currentCard];
+
+  document.getElementById('counter').textContent = `Card ${currentCard + 1} of ${total}`;
+  document.getElementById('progressBar').style.width = `${((currentCard + 1) / total) * 100}%`;
+
+  const cardEl = document.getElementById('card');
+  cardEl.style.animation = 'none';
+  cardEl.offsetHeight;
+  cardEl.style.animation = '';
+  cardEl.innerHTML = `
+    <div class="card-header">
+      <div class="card-icon">${card.icon}</div>
+      <div>
+        <div class="card-title">${card.title}</div>
+        <div class="card-subtitle">${card.subtitle}</div>
       </div>
-      <span class="week-arrow">→</span>
-    `;
-    grid.appendChild(a);
+    </div>
+    <div class="card-body">${card.content}</div>
+  `;
+
+  document.getElementById('prevBtn').disabled = currentCard === 0;
+  document.getElementById('nextBtn').disabled = currentCard === total - 1;
+
+  document.querySelectorAll('.dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentCard);
   });
 
-  main.appendChild(grid);
+  document.getElementById('counter').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-// Coming soon
-const comingSoon = COMING_SOON.filter(n => !WEEKS.find(w => w.week === n && w.available));
-if (comingSoon.length > 0) {
-  const divider = document.createElement('div');
-  divider.className = 'divider';
-  main.appendChild(divider);
+function navigate(dir) {
+  const week = WEEKS[currentWeek];
+  currentCard = Math.max(0, Math.min(week.cards.length - 1, currentCard + dir));
+  renderCard();
+}
 
-  const heading2 = document.createElement('div');
-  heading2.className = 'section-heading';
-  heading2.textContent = 'Coming soon';
-  main.appendChild(heading2);
+// ───────────────────────────── Build index ────────────────────
+function buildIndex() {
+  const main = document.getElementById('index-main');
+  main.innerHTML = '';
 
-  const grid2 = document.createElement('div');
-  grid2.className = 'week-grid';
+  const available = Object.keys(WEEKS).map(Number).sort((a, b) => a - b);
 
-  comingSoon.forEach(n => {
+  if (available.length) {
+    const h = document.createElement('div');
+    h.className = 'section-heading';
+    h.textContent = `${available.length} week${available.length !== 1 ? 's' : ''} available`;
+    main.appendChild(h);
+
+    const grid = document.createElement('div');
+    grid.className = 'week-grid';
+    available.forEach(n => {
+      const w = WEEKS[n];
+      const div = document.createElement('div');
+      div.className = 'week-card';
+      div.onclick = () => showWeek(n);
+      div.innerHTML = `
+        <div class="wc-num">Week ${n}</div>
+        <div class="wc-title">${w.title}</div>
+        <div class="wc-sub">${w.subtitle}</div>
+        <div class="wc-topics">${w.topics.map(t => `<span class="topic-chip">${t}</span>`).join('')}</div>
+        <span class="wc-arrow">→</span>
+      `;
+      grid.appendChild(div);
+    });
+    main.appendChild(grid);
+  }
+
+  const soon = COMING_SOON.filter(n => !WEEKS[n]);
+  if (soon.length) {
+    const divider = document.createElement('div');
+    divider.className = 'index-divider';
+    main.appendChild(divider);
+
+    const h2 = document.createElement('div');
+    h2.className = 'section-heading';
+    h2.textContent = 'Coming soon';
+    main.appendChild(h2);
+
+    const grid2 = document.createElement('div');
+    grid2.className = 'week-grid';
+    soon.forEach(n => {
+      const div = document.createElement('div');
+      div.className = 'week-card soon';
+      div.innerHTML = `
+        <div class="wc-num">Week ${n}</div>
+        <div class="wc-title">Week ${n}</div>
+        <span class="soon-badge">Not yet generated</span>
+      `;
+      grid2.appendChild(div);
+    });
+    main.appendChild(grid2);
+  }
+
+  const footer = document.createElement('div');
+  footer.className = 'index-footer';
+  footer.innerHTML = '<em>Source: Your Baby Week by Week</em> — all content sourced directly from the book';
+  main.appendChild(footer);
+}
+
+buildIndex();
+
+// ───────────────────────── Search ─────────────────────────────
+function stripHtml(html) {
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
+}
+
+// Build a flat index of every card across all weeks
+const SEARCH_INDEX = (() => {
+  const idx = [];
+  Object.keys(WEEKS).map(Number).sort((a, b) => a - b).forEach(n => {
+    WEEKS[n].cards.forEach((card, i) => {
+      idx.push({
+        weekNum: n,
+        cardIdx: i,
+        icon: card.icon,
+        title: card.title,
+        subtitle: card.subtitle,
+        text: stripHtml(card.content || '')
+      });
+    });
+  });
+  return idx;
+})();
+
+function getExcerpt(text, query, maxLen = 130) {
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const lower = text.toLowerCase();
+  let pos = -1;
+  for (const t of terms) { pos = lower.indexOf(t); if (pos !== -1) break; }
+  let start = Math.max(0, pos - 40);
+  let excerpt = (start > 0 ? '…' : '') + text.slice(start, start + maxLen) + (start + maxLen < text.length ? '…' : '');
+  terms.forEach(t => {
+    if (!t) return;
+    const re = new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+    excerpt = excerpt.replace(re, m => `<mark>${m}</mark>`);
+  });
+  return excerpt;
+}
+
+let searchTimer = null;
+
+function doSearch(raw) {
+  const query = raw.trim();
+  const resultsEl = document.getElementById('searchResults');
+  const mainEl    = document.getElementById('index-main');
+  const clearBtn  = document.getElementById('searchClear');
+
+  clearBtn.classList.toggle('visible', raw.length > 0);
+
+  if (!query) {
+    resultsEl.classList.remove('visible');
+    resultsEl.innerHTML = '';
+    mainEl.style.display = '';
+    return;
+  }
+
+  mainEl.style.display = 'none';
+  resultsEl.classList.add('visible');
+
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const hits = SEARCH_INDEX.filter(item => {
+    const hay = `${item.title} ${item.subtitle} ${item.text}`.toLowerCase();
+    return terms.every(t => hay.includes(t));
+  });
+
+  if (!hits.length) {
+    resultsEl.innerHTML = `
+      <div class="search-results-label">No results</div>
+      <div class="search-no-results">Nothing found for "<strong>${query}</strong>"<br>Try a different word</div>`;
+    return;
+  }
+
+  resultsEl.innerHTML = `<div class="search-results-label">${hits.length} result${hits.length !== 1 ? 's' : ''}</div>`;
+  hits.forEach(item => {
     const div = document.createElement('div');
-    div.className = 'week-card coming-soon';
+    div.className = 'search-result-item';
     div.innerHTML = `
-      <div class="week-num">Week ${n}</div>
-      <div class="week-title">Week ${n}</div>
-      <span class="coming-badge">Not yet generated</span>
-    `;
-    grid2.appendChild(div);
+      <div class="search-result-icon">${item.icon}</div>
+      <div class="search-result-body">
+        <div class="search-result-week">Week ${item.weekNum}</div>
+        <div class="search-result-title">${item.title}</div>
+        <div class="search-result-excerpt">${getExcerpt(item.text || item.subtitle, query)}</div>
+      </div>`;
+    div.onclick = () => {
+      clearSearch();
+      showWeek(item.weekNum);
+      currentCard = item.cardIdx;
+      renderCard();
+    };
+    resultsEl.appendChild(div);
   });
-
-  main.appendChild(grid2);
 }
 
-// Footer
-const footer = document.createElement('footer');
-footer.innerHTML = '<em>Source: Your Baby Week by Week</em> — all content sourced directly from the book';
-main.appendChild(footer);
-</script>
+function clearSearch() {
+  const input = document.getElementById('searchInput');
+  input.value = '';
+  doSearch('');
+  input.focus();
+}
 
+document.getElementById('searchInput').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => doSearch(e.target.value), 150);
+});
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Escape') clearSearch();
+});
+</script>
 </body>
 </html>
