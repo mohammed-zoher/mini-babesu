@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 3 — Your Baby Week by Week</title>
+<style>
+  :root {
+    --cream: #FDF6EE;
+    --card-bg: #FFFCF8;
+    --warm-brown: #5C3D2E;
+    --muted: #8C7060;
+    --accent: #C4704A;
+    --accent-light: #F0D9CC;
+    --accent-pale: #FAF0EA;
+    --border: #EAD9CC;
+    --shadow: rgba(92,61,46,0.08);
+    --green: #5A7A5A;
+    --green-pale: #EBF2EB;
+    --blue: #4A6A8A;
+    --blue-pale: #E8F0F7;
+    --gold: #A07A3A;
+    --gold-pale: #F5EDD8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--warm-brown);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--warm-brown);
+    background-image: radial-gradient(ellipse at 70% 50%, rgba(196,112,74,0.3) 0%, transparent 70%);
+    padding: 52px 24px 44px;
+    text-align: center;
+    color: var(--cream);
+  }
+  .header .week-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-size: clamp(26px, 5vw, 40px);
+    font-weight: normal;
+    letter-spacing: -0.01em;
+    color: #FDF6EE;
+    margin-bottom: 10px;
+  }
+  .header .subtitle {
+    font-style: italic;
+    font-size: 15px;
+    color: rgba(253,246,238,0.6);
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  /* COUNTER & PROGRESS */
+  .counter {
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 28px 24px 10px;
+  }
+  .progress-wrap {
+    max-width: min(560px, 94%);
+    margin: 0 auto 24px;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.35s ease;
+  }
+
+  /* CARD */
+  .card-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 0 24px;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: 0 4px 28px var(--shadow);
+    width: min(560px, 100%);
+    overflow: hidden;
+    animation: slideIn 0.3s ease both;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* CARD HEADER */
+  .card-header {
+    padding: 26px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .card-icon {
+    font-size: 22px;
+    background: var(--accent-pale);
+    border-radius: 12px;
+    padding: 10px 12px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .card-header-text {}
+  .card-title {
+    font-size: 19px;
+    font-weight: bold;
+    color: var(--warm-brown);
+    margin-bottom: 3px;
+    line-height: 1.2;
+  }
+  .card-subtitle {
+    font-style: italic;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* CARD BODY */
+  .card-body {
+    padding: 24px 28px 28px;
+  }
+
+  /* STAT PILLS */
+  .stat-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .stat-pill {
+    background: var(--accent-pale);
+    border: 1px solid var(--accent-light);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: var(--warm-brown);
+  }
+  .stat-pill strong { color: var(--accent); }
+
+  /* BULLET LIST */
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  ul li {
+    padding: 10px 0 10px 20px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.65;
+    border-bottom: 1px solid var(--border);
+    color: var(--warm-brown);
+  }
+  ul li:last-child { border-bottom: none; }
+  ul li::before {
+    content: '·';
+    position: absolute;
+    left: 4px;
+    color: var(--accent);
+    font-size: 18px;
+    line-height: 1.4;
+  }
+
+  /* NUMBERED STEPS */
+  ol.steps {
+    list-style: none;
+    padding: 0;
+    counter-reset: steps;
+  }
+  ol.steps li {
+    padding: 10px 0 10px 42px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.65;
+    border-bottom: 1px solid var(--border);
+    counter-increment: steps;
+  }
+  ol.steps li:last-child { border-bottom: none; }
+  ol.steps li::before {
+    content: counter(steps);
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 26px;
+    height: 26px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Georgia, serif;
+  }
+
+  /* INFO BOXES */
+  .info-box {
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin-top: 14px;
+  }
+  .info-box strong { display: block; margin-bottom: 4px; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .info-box.warm  { background: var(--accent-pale); border: 1px solid var(--accent-light); color: var(--warm-brown); }
+  .info-box.warm strong { color: var(--accent); }
+  .info-box.green { background: var(--green-pale); border: 1px solid #C2D9C2; color: #2E4A2E; }
+  .info-box.green strong { color: var(--green); }
+  .info-box.blue  { background: var(--blue-pale); border: 1px solid #C0D0DF; color: #1E3045; }
+  .info-box.blue strong { color: var(--blue); }
+  .info-box.amber { background: var(--gold-pale); border: 1px solid #DEC89A; color: #4A3010; }
+  .info-box.amber strong { color: var(--gold); }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 18px 0 10px;
+  }
+  .section-label:first-child { margin-top: 0; }
+
+  /* NAV */
+  .nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 24px 24px 10px;
+  }
+  .btn {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    padding: 10px 28px;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    border: 1.5px solid var(--accent);
+  }
+  .btn-prev {
+    background: transparent;
+    color: var(--accent);
+  }
+  .btn-prev:hover:not(:disabled) {
+    background: var(--accent);
+    color: white;
+    transform: translateY(-1px);
+  }
+  .btn-next {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-next:hover:not(:disabled) {
+    background: #A85A38;
+    transform: translateY(-1px);
+  }
+  .btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+    transform: none;
+  }
+
+  /* DOTS */
+  .dots {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    padding: 12px 24px 32px;
+    flex-wrap: wrap;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    padding: 0;
+  }
+  .dot.active {
+    background: var(--accent);
+    transform: scale(1.3);
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    font-style: italic;
+    font-size: 11px;
+    color: var(--muted);
+    padding: 0 24px 36px;
+  }
+
+  /* BACK LINK */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    text-decoration: none;
+    padding: 14px 24px 0;
+  }
+  .back-link:hover { color: white; }
+
+  @media (max-width: 500px) {
+    .card-header { padding: 20px 18px 16px; }
+    .card-body { padding: 18px 18px 22px; }
+    .btn { padding: 9px 20px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a class="back-link" href="index.html">← All weeks</a>
+  <div class="week-label">Week 3</div>
+  <h1>The Crying Weeks Begin</h1>
+  <p class="subtitle">Feeding, colic, sleep soothing & early development</p>
+</div>
+
+<div class="counter" id="counter">Card 1 of 7</div>
+<div class="progress-wrap">
+  <div class="progress-bar" id="progressBar" style="width: 14.28%"></div>
+</div>
+
+<div class="card-wrap">
+  <div class="card" id="card"></div>
+</div>
+
+<div class="nav">
+  <button class="btn btn-prev" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+  <button class="btn btn-next" id="nextBtn" onclick="navigate(1)">Next →</button>
+</div>
+
+<div class="dots" id="dots"></div>
+
+<footer>
+  <em>Source: Your Baby Week by Week</em> — all content sourced directly from the book
+</footer>
+
+<script>
+const cards = [
+  {
+    icon: '🍼',
+    title: 'Feeding',
+    subtitle: 'Amounts, patterns & introducing a bottle',
+    content: `
+      <div class="stat-row">
+        <div class="stat-pill">Daily total: <strong>600–750 ml / 21–26 oz</strong></div>
+        <div class="stat-pill">Per feed: <strong>up to 120 ml / 4 oz</strong></div>
+        <div class="stat-pill">Feeds per day: <strong>7–10</strong></div>
+      </div>
+      <ul>
+        <li>Don't worry if your baby still doesn't show much sign of settling into a three-hourly feeding pattern — he's very young and the more important issue is still his weight gain.</li>
+        <li>It's important to take your baby to the clinic in the early months because weight gain is objective and measurements can sometimes reveal underlying problems.</li>
+        <li>If your baby seems happy, he's more than likely to be healthy — avoid becoming obsessed with the growth chart.</li>
+      </ul>
+      <div class="section-label">Breastfeeding — introducing a bottle this week</div>
+      <ul>
+        <li>If you want your baby to be able to take a bottle at some stage, this week is a good time to start — he's still young enough to take it without a fuss.</li>
+        <li>In a few weeks' time he may refuse a bottle entirely. Many breastfeeding mums have struggled to get a five-month-old to take a bottle when they long for a night out or for their partner to give a night feed.</li>
+        <li>Offer just a couple of ounces of expressed milk or formula — enough to get him into a sucking rhythm. To keep the habit up, give a bottle every third day.</li>
+      </ul>
+      <div class="section-label">Bottle-feeding — spotting overfeeding</div>
+      <ul>
+        <li>Watch the weight chart — no sudden centile jumps means you're not overfeeding.</li>
+        <li>When he's had enough, he'll turn his head from the bottle — don't force him to finish.</li>
+        <li>If he falls asleep but continues to suck lightly, he's had enough and is just enjoying the comfort. Try removing the bottle; if he protests, let him suck your finger.</li>
+        <li><strong>Signs of too much formula:</strong> excessive spitting up and abdominal pain (he'll draw his legs up and cry).</li>
+      </ul>
+    `
+  },
+  {
+    icon: '⚖️',
+    title: 'Weight & Growth',
+    subtitle: 'Reading the centile chart and when to seek help',
+    content: `
+      <div class="stat-row">
+        <div class="stat-pill">Typical weekly gain: <strong>113–170 g / 4–6 oz</strong></div>
+      </div>
+      <div class="info-box green">
+        <strong>Normal</strong>
+        Few babies grow in a consistent pattern that plots a neat line on the chart — a drift to a different centile over the weeks is very common. Jumping down one centile really isn't an issue.
+      </div>
+      <div class="section-label">Not enough weight gain</div>
+      <ul>
+        <li>Minimal weight gain for a couple of weeks is likely to be just a blip — perhaps a cold reducing appetite — usually followed by a catch-up period.</li>
+        <li>Another reason: your baby was bigger at birth than genetically programmed, and is now finding his true centile.</li>
+        <li>Most health visitors will start getting anxious if your baby slips down two centiles.</li>
+      </ul>
+      <div class="section-label">No weight gain</div>
+      <ul>
+        <li>Your baby can go up to two weeks without gaining weight before it becomes a concern.</li>
+        <li>After two weeks, seek advice — he's probably not feeding properly and may be getting dehydrated.</li>
+      </ul>
+      <div class="section-label">Weight loss</div>
+      <ul>
+        <li><strong>Fast weight loss:</strong> almost certainly dehydration from feeding problems, or gastroenteritis. Always seek help.</li>
+        <li><strong>Slow, steady loss over several weeks:</strong> more serious and can indicate heart problems.</li>
+      </ul>
+      <div class="section-label">Too much weight gain</div>
+      <ul>
+        <li>Putting on 340 g/12 oz a week for a fortnight isn't a problem if it's a one-off — usually catch-up growth after illness.</li>
+        <li>If your baby is putting on excessive weight and seems unwell, see a doctor — may indicate fluid retention.</li>
+      </ul>
+      <div class="info-box blue">
+        <strong>Final size</strong>
+        At this early stage, weight chart position is no prediction of final size. A more accurate predictor is the size of you and your partner. From three months, the chart can give a clearer idea.
+      </div>
+    `
+  },
+  {
+    icon: '💛',
+    title: 'Crying & Colic',
+    subtitle: 'Evening fussing, what\'s normal, and when it\'s colic',
+    content: `
+      <div class="stat-row">
+        <div class="stat-pill">Expected crying: <strong>1–3 hours/day</strong></div>
+        <div class="stat-pill">Colic: <strong>more than 3 hours/day</strong></div>
+      </div>
+      <div class="section-label">Evening crying</div>
+      <ul>
+        <li>About 9 out of 10 babies have an unexplained evening crying spell lasting 15 minutes to an hour.</li>
+        <li>No one is sure why — it could be that babies become wound up from excitement during the day and need soothing.</li>
+        <li>If breastfeeding, your milk supply is at its lowest at the end of the day when you're tired, which can exacerbate your baby's anxiety.</li>
+        <li>There is no quick fix — you have to spend time cuddling, rocking, and comfort-feeding (sucking can soothe him). Unexplained crying rarely goes on longer than three months.</li>
+      </ul>
+      <div class="section-label">Colic</div>
+      <ul>
+        <li>Colic is when the intestine wall contracts excessively, making your baby's tummy taut and painful.</li>
+        <li><strong>Definition:</strong> three or more hours of crying, beginning at around three weeks old, occurring at least three days a week.</li>
+        <li>His knees draw up or he goes rigid — signs of extreme pain.</li>
+        <li>Colic peaks between weeks 6 and 8 and will disappear by about week 12.</li>
+      </ul>
+      <div class="info-box green">
+        <strong>Reassurance</strong>
+        Colic is not a serious medical condition. Your baby will come to no harm and there will be no long-term effects.
+      </div>
+      <div class="info-box warm">
+        <strong>If it all gets too much</strong>
+        Contact the Cry-sis charity on 08451 228 669 or visit www.cry-sis.org.uk for advice.
+      </div>
+    `
+  },
+  {
+    icon: '🩺',
+    title: 'Colic — Soothing Strategies',
+    subtitle: 'Practical steps to help your baby through colic attacks',
+    content: `
+      <div class="section-label">Warm bath & tummy massage</div>
+      <ul>
+        <li>Colic attacks usually occur at the same time each day — give a bath before the attack, not during, to help relax tummy muscles.</li>
+        <li>Massage his tummy before the colic starts with clockwise circles to help wind through his gut. Massaging during an attack may make him worse.</li>
+      </ul>
+      <div class="section-label">Gas-relieving drops</div>
+      <ul>
+        <li><strong>Infacol or Dentinox Colic Drops</strong> can be given throughout the day to help release built-up gas. Not a miracle cure — some parents say they help a little.</li>
+        <li>When your baby is a month old, you can give <strong>gripe water</strong>, which is cheaper. Again, not a miracle cure.</li>
+        <li><strong>Lactase drops</strong> (e.g. Colief) help break down milk sugar — some doctors think colic may be caused by a temporary problem digesting lactose.</li>
+        <li>Special low-lactose first formula milks are also available. Speak to your health visitor before using one.</li>
+      </ul>
+      <div class="section-label">Burping & expelling wind</div>
+      <ul>
+        <li>Burp your baby halfway through a feed — sit him up and rub his back for five minutes. Spend time winding him after the feed too. It can take a newborn up to 40 minutes for wind to come up.</li>
+        <li>Lie him on his back and gently draw his knees up towards his chest — this sometimes releases trapped wind. Don't do this during a colic attack as it can be extremely painful.</li>
+        <li>Sit him up and gently bend him forward, pushing his nose towards his knees — can bring up a burp. Again, avoid during an attack.</li>
+        <li>Lie him over your forearm and massage his tummy gently with your other hand.</li>
+      </ul>
+      <div class="section-label">Check feeding technique</div>
+      <ul>
+        <li>If breastfeeding, make sure your baby is latching on properly and not gulping air.</li>
+        <li>If bottle-feeding, try a different style of bottle or teat — anti-colic bottles are designed to reduce air intake. You may need to try several before finding the best one.</li>
+      </ul>
+      <div class="section-label">Rocking & movement</div>
+      <ul>
+        <li>Rock him and walk around — try wearing a baby carrier round the house to free up your hands.</li>
+        <li>If your baby doesn't like being rocked, try lying down with him on your tummy while you stroke his back.</li>
+        <li>Car journeys work as babies find it almost impossible to stay awake in the car — but avoid relying on this for more than three consecutive days.</li>
+      </ul>
+      <div class="section-label">Ear plugs & help</div>
+      <ul>
+        <li>Ear plugs or listening to music will take the edge off the noise and help you stay calmer — he'll sense you're less anxious when you hold him.</li>
+        <li>Make sure your partner (or someone else) is around to help — it can be exhausting. Even a babysitter once a week to take him out in the buggy would ease the strain.</li>
+      </ul>
+      <div class="info-box blue">
+        <strong>Cranial osteopathy</strong>
+        A gentle treatment supposed to release tension resulting from a traumatic birth. Many parents find it helpful, but few say it's a miracle cure. Ask your health visitor or GP for details of a registered local practitioner.
+      </div>
+    `
+  },
+  {
+    icon: '😴',
+    title: 'Sleep & Soothing',
+    subtitle: 'How to get your baby off to sleep — and keep him there',
+    content: `
+      <div class="stat-row">
+        <div class="stat-pill">Sleep needed: <strong>15–18 hours/day</strong></div>
+        <div class="stat-pill">Pattern: <strong>irregular</strong></div>
+      </div>
+      <ul>
+        <li>Soothing a baby to sleep is something anyone can learn — it just takes patience and practice. Your baby must not be hungry or you won't stand a chance.</li>
+        <li>Ignore well-meaning suggestions to let him cry himself to sleep — it's far too soon to think about controlled crying at this stage.</li>
+        <li>Try to avoid anything too elaborate to get him off to sleep (e.g. driving around the block) — keep things simple so he doesn't become dependent on it.</li>
+      </ul>
+      <div class="section-label">Soothing techniques</div>
+      <ul>
+        <li><strong>Rocking:</strong> gentle movement reminds your baby of being in the womb. Find a comfortable carrying position and keep a regular rocking rhythm. It could take 20 minutes the first time — be persistent.</li>
+        <li><strong>Singing:</strong> babies learn to recognise melodies before language. After a few days your baby will start to associate your singing voice with sleep time.</li>
+        <li><strong>Shushing:</strong> sounds like blood pumping in the womb. You can also use a portable white noise device or download a white noise app.</li>
+        <li><strong>Cuddling:</strong> all babies love being held. Position his head in your left arm so his ear is close to your heart — he may even hear it beating.</li>
+        <li><strong>Patting his bottom:</strong> light, rhythmic pats can be soothing as it reminds him of the heartbeat in the womb.</li>
+      </ul>
+      <div class="section-label">The floppy arm test</div>
+      <div class="info-box amber">
+        <strong>Is he in a deep sleep?</strong>
+        When your baby is in a deep sleep, his arms will go completely floppy. Pick up an arm — if it drops down heavily, he's ready to be put in his cot. If it's still a little rigid, wait longer.
+      </div>
+      <div class="section-label">Early sleep training</div>
+      <div class="info-box warm">
+        <strong>Golden rule — put your baby down awake</strong>
+        Put your baby down when he's calm and sleepy but before he's properly asleep. Watch to see if he can settle himself. Start during the day when you have more energy. If he cries, try shushing and resting a comforting hand on his tummy, or rocking his crib gently. If that doesn't work, pick him up and start again.
+      </div>
+    `
+  },
+  {
+    icon: '🩹',
+    title: 'Nappies & Nail Cutting',
+    subtitle: 'What to expect — and how to tackle those tiny fingernails',
+    content: `
+      <div class="section-label">Nappies</div>
+      <div class="stat-row">
+        <div class="stat-pill">Wet nappies: <strong>6–10 per day</strong></div>
+        <div class="stat-pill">Dirty nappies: <strong>0–10 per day</strong></div>
+      </div>
+      <ul>
+        <li>Nappy changing will continue to take up a great proportion of your time — your baby's bowels remain relentlessly overactive and unpredictable.</li>
+        <li>This makes going out difficult as you may find yourself changing pooey, often leaky, nappies in all sorts of places.</li>
+        <li>If you haven't already, buy a travel changing mat — essential for changing on a much-used changing table or the floor of a public loo.</li>
+      </ul>
+      <div class="section-label">Fingernails</div>
+      <ul>
+        <li>Fingernails grow very fast and need to be trimmed at least once a week so he doesn't scratch his face.</li>
+        <li><strong>Easiest method:</strong> bite your baby's nails — they're very soft and biting prevents accidentally cutting his fingers.</li>
+        <li><strong>Scissors:</strong> wait until your baby is asleep, use blunt-ended baby nail scissors. Pull each finger pad back before cutting to make the nail seem longer and reduce the risk of cutting skin. Don't leave sharp corners.</li>
+        <li><strong>Clippers:</strong> some parents find baby nail clippers easier — but these are extremely sharp, so take care.</li>
+        <li>Scratch mittens are useful when a nail trim is overdue but you haven't had the chance yet.</li>
+        <li>If you do cut his finger, don't feel too guilty — very common, and a baby's skin repairs itself much faster than an adult's. Dab any blood with a clean tissue and leave it to heal.</li>
+      </ul>
+      <div class="section-label">Toenails</div>
+      <ul>
+        <li>Don't worry too much about toenails — he won't scratch himself with them and they don't grow as fast (only need trimming every few weeks).</li>
+        <li>Sometimes toenails look ingrown — use your fingernail to lift the nail away from the nail pad before trimming, or simply leave well alone. Newborns don't actually suffer from ingrown toenails.</li>
+      </ul>
+    `
+  },
+  {
+    icon: '🌱',
+    title: 'Development & Play',
+    subtitle: 'How your baby is growing — and how to play with him',
+    content: `
+      <ul>
+        <li>Your baby already knows how to wave his arms and will begin to do this more energetically.</li>
+        <li>He's starting to reach for things with his fists (he's too young to have control over his fingers). When he reaches, he'll do it slowly and probably not hit his target very often.</li>
+        <li>He's most likely to notice <strong>high-contrast black-and-white toys</strong> and soft books with high-contrast patterns at this age.</li>
+        <li>Although your baby recognises your smell, voice and face, he still only sees your outline — he's a few weeks off being able to pay attention to your features.</li>
+        <li>A drastic haircut, a ponytail, or wearing a hat will make it harder for him to recognise you. When playing with him, keep your face close to his.</li>
+        <li>Your baby's movements are involuntary but crucial for development. Every time he moves, his brain's messaging system becomes more developed as he learns to link the feel of an object with what it looks like and where his hand is in space.</li>
+      </ul>
+      <div class="info-box amber">
+        <strong>⚠ Safety tip — warming milk</strong>
+        Never use a microwave to warm formula or expressed milk — it can create pockets of extremely hot milk that could burn your baby. Use a bowl of hot water, run the bottle under warm water, or use an electric bottle warmer. Always shake well and test the temperature before feeding.
+      </div>
+      <div class="info-box warm">
+        <strong>You made it through Week 3 🎉</strong>
+        Colic is exhausting — you're doing brilliantly.
+      </div>
+    `
+  }
+];
+
+let current = 0;
+const total = cards.length;
+
+function renderCard() {
+  const card = cards[current];
+  const el = document.getElementById('card');
+
+  // Force reflow for animation retrigger
+  el.style.animation = 'none';
+  el.offsetHeight;
+  el.style.animation = '';
+
+  el.innerHTML = `
+    <div class="card-header">
+      <div class="card-icon">${card.icon}</div>
+      <div class="card-header-text">
+        <div class="card-title">${card.title}</div>
+        <div class="card-subtitle">${card.subtitle}</div>
+      </div>
+    </div>
+    <div class="card-body">${card.content}</div>
+  `;
+
+  document.getElementById('counter').textContent = `Card ${current + 1} of ${total}`;
+  document.getElementById('progressBar').style.width = `${((current + 1) / total) * 100}%`;
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+
+  // Update dots
+  document.querySelectorAll('.dot').forEach((d, i) => {
+    d.classList.toggle('active', i === current);
+  });
+
+  // Scroll counter into view
+  document.getElementById('counter').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function navigate(dir) {
+  current = Math.max(0, Math.min(total - 1, current + dir));
+  renderCard();
+}
+
+// Build dots
+const dotsEl = document.getElementById('dots');
+cards.forEach((_, i) => {
+  const dot = document.createElement('button');
+  dot.className = 'dot' + (i === 0 ? ' active' : '');
+  dot.setAttribute('aria-label', `Card ${i + 1}`);
+  dot.onclick = () => { current = i; renderCard(); };
+  dotsEl.appendChild(dot);
+});
+
+renderCard();
+</script>
+</body>
+</html>
