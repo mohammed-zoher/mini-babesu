@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mini Babesu 🍼</title>
+<title>Peek-a-Week 🍼</title>
 <style>
   :root {
     --cream: #FDF6EE;
@@ -159,9 +159,19 @@
     letter-spacing: 0.07em; text-transform: uppercase; margin-top: 7px;
   }
   .index-divider { height: 1px; background: var(--border); margin: 28px 0; }
+  .disclaimer-box {
+    background: var(--blue-pale); border: 1px solid #C0D0DF;
+    border-radius: 10px; padding: 14px 18px;
+    font-size: 12.5px; line-height: 1.65; color: #1E3045;
+    margin-top: 32px;
+  }
+  .disclaimer-box strong {
+    display: block; font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--blue); margin-bottom: 5px;
+  }
   .index-footer {
     text-align: center; font-style: italic; font-size: 11px;
-    color: var(--muted); padding-top: 6px;
+    color: var(--muted); padding-top: 12px;
   }
 
   /* ── SEARCH ─────────────────────────────── */
@@ -424,8 +434,8 @@
 
 <!-- SHARED HEADER (dynamic) -->
 <div class="header" id="header">
-  <div class="header-top-label" id="header-label">Reference Guide</div>
-  <h1 id="header-title">Mini Babesu 🍼</h1>
+  <div class="header-top-label" id="header-label">Baby Reference Guide</div>
+  <h1 id="header-title">Peek-a-Week 🍼</h1>
   <p class="header-sub" id="header-sub">Your baby, week by week</p>
 </div>
 
@@ -1190,8 +1200,8 @@ function showIndex() {
   document.getElementById('view-index').style.display = 'block';
   document.getElementById('view-week').style.display = 'none';
   document.getElementById('back-bar').classList.remove('visible');
-  document.getElementById('header-label').textContent = 'Reference Guide';
-  document.getElementById('header-title').textContent = 'Mini Babesu 🍼';
+  document.getElementById('header-label').textContent = 'Baby Reference Guide';
+  document.getElementById('header-title').textContent = 'Peek-a-Week 🍼';
   document.getElementById('header-sub').textContent = 'Your baby, week by week';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -1322,9 +1332,17 @@ function buildIndex() {
     main.appendChild(grid2);
   }
 
+  const disclaimer = document.createElement('div');
+  disclaimer.className = 'disclaimer-box';
+  disclaimer.innerHTML = `
+    <strong>General guidance only</strong>
+    The information on this site is a summary of content from <em>Your Baby Week by Week</em> by Dr Caroline Fertleman &amp; Simone Cave, and is intended as a convenient reference — not as medical advice. Every baby is different. Always consult your GP, health visitor, midwife, or other qualified healthcare professional for advice specific to your baby's needs.
+  `;
+  main.appendChild(disclaimer);
+
   const footer = document.createElement('div');
   footer.className = 'index-footer';
-  footer.innerHTML = '<em>Source: Your Baby Week by Week</em> — all content sourced directly from the book';
+  footer.innerHTML = 'Content sourced from <em>Your Baby Week by Week</em> by Dr Caroline Fertleman &amp; Simone Cave. Peek-a-Week is an unofficial personal reference tool and is not affiliated with or endorsed by the authors or publisher.';
   main.appendChild(footer);
 }
 
